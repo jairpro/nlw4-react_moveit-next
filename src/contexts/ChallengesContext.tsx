@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import challenges from '../../challenges.json'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
@@ -8,11 +8,11 @@ interface Challenge {
   amount: number
 }
 
-interface ChallengesProviderData {
+interface ChallengesContextData {
   level: number
   currentExperience: number 
-  challengesCompleted: number
   experienceToNextLevel: number
+  challengesCompleted: number
   activeChallenge: Challenge
   levelUp: () => void
   startNewChallenge: () => void
@@ -24,18 +24,27 @@ interface ChallengesProviderProps {
   children: ReactNode;
 }
 
-export const ChallengesContext = createContext({} as ChallengesProviderData)
+export const ChallengesContext = createContext({} as ChallengesContextData)
 
 export function ChallengesProvider({ children }: ChallengesProviderProps) {
   const [level, setLevel] = useLocalStorage("level", 1)
   const [currentExperience, setCurrentExperience] = useLocalStorage("currentExperience", 0)
   const [challengesCompleted, setChallengesCompleted] = useLocalStorage("challengesCompleted", 0)
+  
+  /*
+  const [level, setLevel] = useState(1)
+  const [currentExperience, setCurrentExperience] = useState(0)
+  const [challengesCompleted, setChallengesCompleted] = useState(0)
+  */
 
   const [activeChallenge, setActiveChallenge] = useState(null)
 
-  const useExperienceBalance = false
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
+
+  useEffect(() => {
+    Notification.requestPermission()
+  }, [])
 
   function levelUp() {
     setLevel(level + 1)
@@ -43,11 +52,24 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
 
   function startNewChallenge() {
     //console.log('New challenge')
+
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length)
     const challenge = challenges[randomChallengeIndex]
 
     setActiveChallenge(challenge)
-    //setCountdownReseted(false)
+
+    new Audio('/notification.mp3').play()
+
+    if (Notification.permission === 'granted') {
+      const n = new Notification('Novo desafio 🎉', {
+        body: `Valendo ${challenge.amount}xp!`
+      })
+      
+      n.onclick = e => {
+        window.focus()
+      }
+    }
+
   }
 
   function resetChallenge() {
@@ -60,20 +82,23 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
       return
     }
 
+    const { amount } = activeChallenge
+
+    // Curiosidade: origem do termo "let" = let it change (deixe isso mudar)
+
+    let finalExperience = currentExperience + amount
+    
+    if (finalExperience >= experienceToNextLevel) {
+      finalExperience = finalExperience - experienceToNextLevel
+      levelUp()      
+    }
+
+    setCurrentExperience(finalExperience)
+    setActiveChallenge(null)
     setChallengesCompleted(challengesCompleted + 1)
-
-    let nextExperience = getNextExperience()
-
-    if (nextExperience < experienceToNextLevel) {
-      setCurrentExperience(nextExperience)
-    }
-    else {
-      newLevel()
-    }
-    resetChallenge()
   }
 
-  function getNextExperience() {
+  /*function getNextExperience() {
     return currentExperience + activeChallenge.amount
   }
 
@@ -82,14 +107,14 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setCurrentExperience(experienceBalance)
     levelUp()
     console.log('Parabéns! Você alcançou um novo level.')
-  }
+  }*/
 
   return (
     <ChallengesContext.Provider value={{
       level,
       currentExperience,
-      challengesCompleted,
       experienceToNextLevel,
+      challengesCompleted,
       activeChallenge,
       levelUp,
       startNewChallenge,
