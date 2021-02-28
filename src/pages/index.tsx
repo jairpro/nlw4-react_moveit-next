@@ -18,7 +18,8 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  console.log(props)
+  // Este log vai aparecer no navegador do usuário
+  console.log(props)  console.log(props)
 
   return (
     <ChallengesProvider
@@ -61,8 +62,8 @@ export default function Home(props: HomeProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { level, currentExperience, challengesCompleted } = ctx.req.cookies
 
-  // isso log vai apárecer no terminal do servidor node no backend
-  //console.log(user)
+  // Este log vai aparecer no terminal do servidor node no backend:
+  console.log({ level, currentExperience, challengesCompleted })
 
   /** 
    * Aqui os dados são passados ao browser do usuário.
