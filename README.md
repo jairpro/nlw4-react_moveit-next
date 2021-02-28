@@ -109,7 +109,7 @@ Passos:
   Pois o comportamento padrão dos rastreadores é esperar o servidor finalizar a resposta para então eles indexarem aquela página.
 
 
-## 💡 Recursos interasantes do JS:
+## 💡 Recursos interessantes do JS:
 
 ### Parametro ...rest:
 
