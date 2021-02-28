@@ -156,7 +156,7 @@ Passos:
 
   As sugestões de deploy propostas foram [netlify.com](https://netlify.com) e [vercel.com](https://vercel.com). Ambas com planos gratuito que possibilita hospedar a grande maioria das aplicações front-end.
 
-  O deploy implementado na aula foi o da version
+  O deploy implementado na aula foi o da Vercel.
   
   Passos:
   
