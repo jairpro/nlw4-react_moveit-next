@@ -69,11 +69,13 @@
   Essa função é que deu surgimento ao NextJS.
 
   Recebe uma variável context, que por padrão é do tipo "any".
-  Para definir o tipo quano se usa Typescrip: informar que o tipo do método *getServerSideProps* é *GetServerSideProps* (importando-o next).
+  Para definir o tipo quando se usa Typescrip: informar que o tipo do método *getServerSideProps* é *GetServerSideProps* (importando do next).
 
   Exemplo:
   
   ```js
+  import { GetServerSideProps } from 'next'
+  
   export function Home(props) {
     return(
       <h1>Olá!</h1>
@@ -108,9 +110,8 @@
 
 ### Parametro ...rest:
 
-  Parece que ...rest quando usado ao final do parâmetro de uma function  retorna num objeto os demais parametros além dos anteriores informados
-  Exemplo:
-
+  Parece que ...rest quando usado ao final do parâmetro de uma _function_ retorna num objeto os demais parametros além dos anteriores informados.
+  
   Exemplo:
 
   ```js
@@ -121,8 +122,8 @@
     }
   ```
 
-  Parece ser útil quando no uso de useState para ter ambas nomenclaturas em props e states
-
+  Parece ser útil quando no uso de useState para ter ambas nomenclaturas em props e states.
+  
   Exemplo:
      
   ```js
@@ -160,13 +161,13 @@
 
   2) Baixar o [Vercel CLI](https://vercel.com/download);
 
-  Com NPM:
+  *Com NPM:*
      
   ```shell
   npm i -g vercel
   ```
 
-  Com Yarn:
+  *Com Yarn:*
 
   Pesquise *yarn global path* ou [acesse](https://classic.yarnpkg.com/en/docs/cli/global/).
   
