@@ -104,7 +104,7 @@ Passos:
   No retorno dessa função os dados são passados ao browser do usuário.
   No exemplo, os dados são passados como parâmetro para um componente Home, logo acima.
 
-  Quando um _"crawlers"_ (rastreador ou motor de busca como Google ou outros) acessar a aplicação, ele vai executar primeiro o método *getServierSideProps* no backend. E só quando finalizar, vai mostrar a interface. E ai sim, o rastreador vai ficar esperando o componente finalizar.
+  Quando um _"crawlers"_ (rastreador ou motor de busca como Google ou outros) acessar a aplicação, ele vai executar primeiro o método *getServerSideProps* no backend. E só quando finalizar, vai mostrar a interface. E ai sim, o rastreador vai ficar esperando o componente finalizar.
   
   Pois o comportamento padrão dos rastreadores é esperar o servidor finalizar a resposta para então eles indexarem aquela página.
 
