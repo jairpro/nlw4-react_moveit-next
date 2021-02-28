@@ -88,8 +88,8 @@
   export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { level, currentExperience, challengesCompleted } = ctx.req.cookies
 
-    // Iste log vai aparecer no terminal do servidor node no backend:
-    console.log(user)
+    // Este log vai aparecer no terminal do servidor node no backend:
+    console.log({ level, currentExperience, challengesCompleted })
 
     return {
       props: {
