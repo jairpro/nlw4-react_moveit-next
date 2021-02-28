@@ -10,7 +10,7 @@ export function ExperienceBar() {
 
     return (
       <header className={styles.experienceBar}>
-        <span>0 xp</span>
+        <span style={currentExperience>0 ? {userSelect: 'none' } : {}}>0 xp</span>
         <div>
           <div style={{width: percentToNextLevelComputed }}/>
 

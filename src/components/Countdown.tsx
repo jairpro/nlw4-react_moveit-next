@@ -11,15 +11,26 @@ export function Countdown() {
     hasFinished, 
     isActive, 
     startCountdown, 
-    resetCountdown  
+    resetCountdown,
+    swicthInitialTime,
   } = useContext(CountdownContext)
 
   const [leftMinute, rightMInute] = String(minutes).padStart(2, '0').split('')
   const [leftSecond, rightSecond] = String(seconds).padStart(2, '0').split('')
 
+  function configInitialTime() {
+    if (!isActive && !hasFinished) {
+      swicthInitialTime()
+      resetCountdown()
+    }
+  }
+
   return (
     <div>
-      <div className={styles.countdownContainer}>
+      <div 
+        className={styles.countdownContainer}
+        onDoubleClick={configInitialTime}
+      >
         <div>
           <span>{leftMinute}</span>
           <span>{rightMInute}</span>

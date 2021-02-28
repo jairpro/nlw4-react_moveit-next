@@ -48,3 +48,6 @@ a {
   text-decoration: none;
 }
 
+img, button {
+  user-select: none;
+}

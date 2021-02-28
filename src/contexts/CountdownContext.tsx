@@ -8,6 +8,7 @@ interface CountdownContextData {
   isActive: boolean
   startCountdown: () => void
   resetCountdown: () => void
+  swicthInitialTime: () => void 
 }
 
 interface CountdownProviderProps {
@@ -18,11 +19,13 @@ export const CountdownContext = createContext({} as CountdownContextData)
 
 let countdownTimeout: NodeJS.Timeout
 
-const initialTime = 25 * 60
-//const initialTime = 0.05 * 60
+const productionInitialTime = 25 * 60
+const devInitialTime = 0.05 * 60
 
 export function CountdownProvider({ children }: CountdownProviderProps) {
   const { startNewChallenge } = useContext(ChallengesContext)
+
+  const [initialTime, setInitialTime] = useState(productionInitialTime)
 
   const [time, setTime] = useState(initialTime)
   const [isActive, setIsActive] = useState(false)
@@ -53,10 +56,12 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
       setHasFinished(true)
       setIsActive(false)
       startNewChallenge()
-      
-      // notification.play()
     }
   }, [isActive, time])
+
+  function swicthInitialTime() {
+    setInitialTime(initialTime===productionInitialTime ? devInitialTime : productionInitialTime)
+  }
 
   return (
     <CountdownContext.Provider value={{
@@ -66,6 +71,7 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
       isActive,
       startCountdown,
       resetCountdown,
+      swicthInitialTime,
     }}>
       {children}
     </CountdownContext.Provider>

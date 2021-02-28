@@ -1,6 +1,8 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
+
 import challenges from '../../challenges.json'
-import { useLocalStorage } from '../hooks/useLocalStorage'
+import { LevelUpModal } from '../components/LevelUpModal'
 
 interface Challenge {
   type: 'body' | 'eye'
@@ -18,26 +20,37 @@ interface ChallengesContextData {
   startNewChallenge: () => void
   resetChallenge: () => void
   completeChallenge: () => void
+  closeLevelUpModal: () => void
 }
 
 interface ChallengesProviderProps {
   children: ReactNode;
+  level: number
+  currentExperience: number
+  challengesCompleted: number
 }
 
 export const ChallengesContext = createContext({} as ChallengesContextData)
 
-export function ChallengesProvider({ children }: ChallengesProviderProps) {
-  const [level, setLevel] = useLocalStorage("level", 1)
-  const [currentExperience, setCurrentExperience] = useLocalStorage("currentExperience", 0)
-  const [challengesCompleted, setChallengesCompleted] = useLocalStorage("challengesCompleted", 0)
-  
-  /*
-  const [level, setLevel] = useState(1)
-  const [currentExperience, setCurrentExperience] = useState(0)
-  const [challengesCompleted, setChallengesCompleted] = useState(0)
-  */
+export function ChallengesProvider({ children, ...rest }: ChallengesProviderProps) {
+  // O ...rest retorna num objeto os demais parametros além de children.
+  //   Uso:
+  //     rest.arq2, rest.arq3, rest.arq4, etc.
+  //     no caso: rest.level, rest.currentExperience, rest.challengesCompleted
+  //
+  // O operador ?? retorna o valor seguinte caso o anterior não existir.
+  //   uso:
+  //     v1 ?? v2
+  //
+  //   parece melhor solução que:
+  //     v1!==undefined v1 ? : v2"
+
+  const [level, setLevel] = useState(rest.level ?? 1)
+  const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0)
+  const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0)
 
   const [activeChallenge, setActiveChallenge] = useState(null)
+  const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
 
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
@@ -46,8 +59,15 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     Notification.requestPermission()
   }, [])
 
+  useEffect(() => {
+    Cookies.set('level', String(level))
+    Cookies.set('currentExperience', String(currentExperience))
+    Cookies.set('challengesCompleted', String(challengesCompleted))
+  }, [level, currentExperience, challengesCompleted])
+
   function levelUp() {
     setLevel(level + 1)
+    setIsLevelUpModalOpen(true)
   }
 
   function startNewChallenge() {
@@ -98,16 +118,9 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
     setChallengesCompleted(challengesCompleted + 1)
   }
 
-  /*function getNextExperience() {
-    return currentExperience + activeChallenge.amount
+  function closeLevelUpModal() {
+    setIsLevelUpModalOpen(false)
   }
-
-  function newLevel() {
-    let experienceBalance = useExperienceBalance ? (getNextExperience() - experienceToNextLevel) : 0
-    setCurrentExperience(experienceBalance)
-    levelUp()
-    console.log('Parabéns! Você alcançou um novo level.')
-  }*/
 
   return (
     <ChallengesContext.Provider value={{
@@ -120,8 +133,11 @@ export function ChallengesProvider({ children }: ChallengesProviderProps) {
       startNewChallenge,
       resetChallenge,
       completeChallenge,
+      closeLevelUpModal,
     }}>
       {children}
+
+      { isLevelUpModalOpen && <LevelUpModal />}
     </ChallengesContext.Provider>
   )
 }
