@@ -19,7 +19,7 @@ interface HomeProps {
 
 export default function Home(props: HomeProps) {
   // Este log vai aparecer no navegador do usuário
-  console.log(props)  console.log(props)
+  console.log(props)
 
   return (
     <ChallengesProvider
