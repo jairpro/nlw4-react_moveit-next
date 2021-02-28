@@ -1,8 +1,8 @@
 # NLW#4 - Trilha ReactJS
 
-## Projeto MOVEIT NEXT
+## 🎯 Projeto MOVEIT NEXT
 
-## Passos:
+Passos:
 
 ### 1) Migrar o projeto anterior ReactJS para o NextJS: 
 
@@ -23,7 +23,7 @@
 
   [http://localhost:3000](http://localhost:3000)
 
-## Telemetria:
+## ⚗ Telemetria:
   O Next faz telemetria, uma coleta anômia de dados relacionados ao seu projeto para fins de melhorias. Detalhes em: [https://nextjs.org/telemetry](https://nextjs.org/telemetry)
 
   Para desabilitar:
@@ -32,7 +32,7 @@
   npx next telemetry disable
   ```
 
-## Dependências:
+## 🧩 Dependências:
 
   ### JS-Cookie
   Para armazenar as pontuações do usuário em cookies:
@@ -109,7 +109,7 @@
   Pois o comportamento padrão dos rastreadores é esperar o servidor finalizar a resposta para então eles indexarem aquela página.
 
 
-## Recursos interasantes do JS:
+## 💡 Recursos interasantes do JS:
 
 ### Parametro ...rest:
 
@@ -152,7 +152,7 @@
   (v1 !== undefined v1 ? : v2)
   ```
 
-## Deploy
+## 🚀 Deploy
 
   As sugestões de deploy propostas foram [netlify.com](https://netlify.com) e [vercel.com](https://vercel.com). Ambas com planos gratuito que possibilita hospedar a grande maioria das aplicações front-end.
 
@@ -244,7 +244,7 @@
   Há também opções de variáveis ambiente, segurança, etc.
 
 
-## Desafios:
+## ⚔ Desafios:
 1) Documentar o projeto:
    - Gif da aplicação;
    - Video;
@@ -275,6 +275,13 @@
    - Ranking de usuários;
    - Compartilhar no Twitter;
    
-   Link do leiatute [Moveit 2.0](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
 
 4) Dá para adicionar muito mais funcionalidades;
+
+## 🎨 Leiautes:
+[Moveit 1.0](https://www.figma.com/file/ge20pu3ofMOKoliUyKx1Nl/Move.it-1.0/duplicate);
+[Moveit 2.0](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
+
+## 💜 Agradecimentos:
+
+_Agradecimento especial ao [Diego Fernandes](https://github.com/diego3g/diego3g) pela aula, ao [Tiago Luchtenberg](https://www.instagram.com/tiagoluchtenberg/?hl=pt-br) pelos leiautes e a todos da [Rockeatseat](https://rocketseat.com.br/) pelo empenho em levar os devs ao próximo nível._
