@@ -37,28 +37,28 @@
   ### JS-Cookie
   Para armazenar as pontuações do usuário em cookies:
 
-    ```shell
-    yarn add js-cookie
-    ```
+  ```shell
+  yarn add js-cookie
+  ```
 
-    ```shell
-    yarn add @types/js-cookie -D
-    ```
+  ```shell
+  yarn add @types/js-cookie -D
+  ```
 
-    Nota: veja sobre @types em DefinitelyType 
+  Nota: veja sobre @types em DefinitelyType 
 
   ### DefinitelyType
   Para adicionar Typescrip caso uma biblioetca ainda não tenha esse suporte. Aqui há suporte para muitas delas:
 
-    [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)
+  [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)
   
-    As numerosas tipagens disponíveis estão na pasta [DefinitelyTyped/types](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types)
+  As numerosas tipagens disponíveis estão na pasta [DefinitelyTyped/types](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types)
 
-    uso:
+  Uso:
 
-    ```shell
-    yarn add @types/biblioteca-alvo -D
-    ```
+  ```shell
+  yarn add @types/biblioteca-alvo -D
+  ```
 
 ### NextJS:
 
@@ -113,13 +113,13 @@
 
   Exemplo:
 
-    ```js
+  ```js
     function(arq1, ...rest) {
       const arq2 = rest.arq2
       const arq3 = rest.arq3
       const arq4 = rest.arq4
     }
-    ```
+  ```
 
   Parece ser útil quando no uso de useState para ter ambas nomenclaturas em props e states
 
@@ -136,17 +136,17 @@
 
   O operador ?? retorna o valor seguinte caso o anterior não existir.
 
-    Uso:
+  Uso:
 
-      ```js
-      (v1 ?? v2)
-      ```
+  ```js
+  (v1 ?? v2)
+  ```
   
-    Parece ser mais prático que:
+  Parece ser mais prático que:
 
-      ```js
-      (v1 !== undefined v1 ? : v2)
-      ```
+  ```js
+  (v1 !== undefined v1 ? : v2)
+  ```
 
 ## Deploy
 
@@ -241,7 +241,36 @@
 
 
 ## Desafios:
-1) Documentar o projeto
+1) Documentar o projeto:
+   - Gif da aplicação;
+   - Video;
+   - Coloca no Github;
+   - Read-me bonito;
+   - Tecnologias utilizadas;
+   - Instruções para baixar e rodar local (*gitclone*, *yarn* para instalar as dependências, etc);
+   - Quais as funcionalidades que existem dentro da aplicação;
+   - Prints da aplicação de como que ela está funcionando (das funcionalidades em si. Uma print de quando aparece o desafio, de quando o usuário sobe de nível. Uma print de quando é a tela em branco); 
+   - Explique a logística e tudo o mais... documentação é o mínimo.
 
+2) Melhorar estilização da aplicação:
+   - Responsividade (medias querys para se adaptar ao mobile);
+   - PWA (Para permitir instalar no celular e sair utilizando, não necessitando desenvolver o app para iOS/Android. O Next tem integração com PWA, pesquise documentações para isso);
+   - Trocar as cores da aplicação (utilizar temas diferentes como dark, separar umas cores diferentes);
 
+3) Novas Funcionalidades - *Moveit 2.0*:
+   - Logar com Github:
+     A ideia inicial era uma tela de login onde o usuário digita seu _username_ do github para a aplicação buscar os dados públicos;
+     Mas poderia ser, levando para o próximo nível, fazer um botão "Logar com Github" fazendo o OAuth do Github (pesquise "oauth github").
+     E pode-se fazer tudo com o NextJS, sem backend. Inclusive acessar API externa, gravar num banco de dados, etc.
+     
+     Pesquise sobre Next no [Youtube da Rocketseat](https://www.youtube.com/c/RocketSeat/search?query=next.js).
+     
+     Veja o vídeo [Serverless com ReactJS e Next.js na Vercel](https://www.youtube.com/watch?v=Cz55Jmhfw84)
+     
+   - Sidebar;
+   - Ranking de usuários;
+   - Compartilhar no Twitter;
+   
+   Link do leiatute [Moveit 2.0](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
 
+4) Dá para adicionar muito mais funcionalidades;
