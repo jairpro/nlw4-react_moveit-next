@@ -77,6 +77,9 @@
   import { GetServerSideProps } from 'next'
   
   export function Home(props) {
+    // Este log vai aparecer no navegador do usuário
+    console.log(props)
+    
     return(
       <h1>Olá!</h1>
     )
@@ -85,7 +88,7 @@
   export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { level, currentExperience, challengesCompleted } = ctx.req.cookies
 
-    // Isto log vai apárecer no terminal do servidor node no backend:
+    // Iste log vai aparecer no terminal do servidor node no backend:
     console.log(user)
 
     return {
