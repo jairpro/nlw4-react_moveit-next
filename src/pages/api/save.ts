@@ -2,9 +2,10 @@ import { NowRequest, NowResponse } from "@vercel/node";
 import { connectToDatabase } from '../../services/mongodb'
 
 export default async (request: NowRequest, response: NowResponse) => {
-  const { login, level, currentExperience, challengesCompleted } = request.body
+  const { user, score } = request.body
+  const { login } = user
 
-  console.log('salvando...')
+  //console.log('salvando...')
 
   const db = await connectToDatabase(process.env.MONGODB_URI)
 
@@ -12,20 +13,21 @@ export default async (request: NowRequest, response: NowResponse) => {
 
   const updatedUser = await collection.updateOne(
     { login }, {
-      $set: {
-        score: {
-          level,
-          currentExperience,
-          challengesCompleted,
-        }
-      }
+      $set: { score }
     }
   )
 
-  if (!updatedUser) {
-    return response.status(400).json({
-      error: 'Error on update practitioner!'
+  if (!updatedUser || updatedUser.result.nModified===0) {
+    const newUser = await collection.insertOne({
+      login,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      plataform: user.plataform,
+      score,
+      subscribedAt: new Date(),
     })
+
+    return response.status(201).json(newUser)
   }
 
   return response.status(201).json(updatedUser)

@@ -15,7 +15,7 @@ export default async (request: NowRequest, response: NowResponse) => {
   })
 
   if (!dbUser) {
-    const newUser = await collection.insertOne({
+    /*const newUser = await collection.insertOne({
       login: user.login,
       name: user.name,
       avatarUrl: user.avatarUrl,
@@ -25,6 +25,10 @@ export default async (request: NowRequest, response: NowResponse) => {
 
     //return response.status(201).json({ ok: true })
     return response.status(201).json(newUser)
+    */
+    return response.status(400).json({
+      error: 'User dos not exists!'
+    })
   }
 
   return response.json(dbUser)

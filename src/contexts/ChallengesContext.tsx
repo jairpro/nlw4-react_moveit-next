@@ -59,7 +59,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, score } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform, score } = useContext(LoginContext)
 
   useEffect(() => {
     Notification.requestPermission()
@@ -143,11 +143,22 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
   async function save() {
     try {
-      const result = await axios.post("/api/save", {
-        login, 
+      const user = {
+        login,
+        name,
+        avatarUrl,
+        plataform,
+      }
+
+      const score = {
         level,
         currentExperience,
         challengesCompleted
+      }
+
+      const result = await axios.post("/api/save", {
+        user, 
+        score,
       })
 
       setSaving(false)
