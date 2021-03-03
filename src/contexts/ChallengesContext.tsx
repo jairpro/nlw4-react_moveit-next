@@ -54,6 +54,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
   const [activeChallenge, setActiveChallenge] = useState(null)
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
@@ -65,14 +66,10 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }, [])
 
   useEffect(() => {
-    
-    /*Cookies.set('level', String(level))
-    Cookies.set('currentExperience', String(currentExperience))
-    Cookies.set('challengesCompleted', String(challengesCompleted))*/
-
-    save()
-    
-  }, [level, currentExperience, challengesCompleted])
+    if (saving) {
+      save()
+    }
+  }, [saving])
 
   useEffect(() => {
     updateScore(score)
@@ -137,6 +134,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     setChallengesCompleted(challengesCompleted + 1)
 
     //await save()
+    setSaving(true)
   }
 
   function closeLevelUpModal() {
@@ -152,6 +150,8 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
         challengesCompleted
       })
 
+      setSaving(false)
+
       if (!result) {
         return false
       }
@@ -160,6 +160,9 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     }
     catch(error) {
       console.log(error)
+
+      setSaving(false)
+
       return false
     }
   }
