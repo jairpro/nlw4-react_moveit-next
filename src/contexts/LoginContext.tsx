@@ -1,7 +1,14 @@
-import { createContext, ReactNode, useState } from "react"
+import { createContext, ReactNode, useContext, useState } from "react"
 import axios from 'axios'
 
 import { Login } from "../components/Login"
+import { ChallengesContext } from "./ChallengesContext"
+
+export interface ScoreData {
+  level: number
+  currentExperience: number
+  challengesCompleted: number
+}
 
 interface LoginContextData {
   login: string
@@ -9,6 +16,7 @@ interface LoginContextData {
   avatarUrl: string
   plataform: string // 'github' | 'facebook' | 'google'
   isLogged: boolean
+  score: ScoreData
   executeLogin: (userLogin: string) => void
   executeLogout: () => void
 }
@@ -25,7 +33,8 @@ export function LoginProvider({ children }: LoginProviderProps) {
   const [avatarUrl, setAvatarUrl] = useState('')
   const [plataform, setPlataform] = useState('')
   const [isLogged, setIsLogged] = useState(false)
-
+  const [score, setScore] = useState({} as ScoreData)
+  
   /*type GithubData = {
     login: string
     name: string
@@ -53,7 +62,7 @@ export function LoginProvider({ children }: LoginProviderProps) {
       return
     }
   }
- 
+
   async function executeLogin(userLogin: string) {
     const user = await connectToGithub(userLogin)
 
@@ -70,8 +79,43 @@ export function LoginProvider({ children }: LoginProviderProps) {
 
     //console.log('user: ', user)
 
-    await axios.post('/api/login', {
-      user, 
+    try {
+      const result = await axios.post('/api/login', {
+        user, 
+      })
+
+      if (!result) {
+        console.log("Erro ao logar...")
+        resetScore()
+        return
+      }
+
+      if (!result.data) {
+        console.log("Login não restornou dados..")
+        resetScore()
+        return
+      }
+
+      if (!result.data.score) {
+        console.log("Praticante ainda sem score salvo...")
+        resetScore()
+        return
+      }
+
+      setScore(result.data.score)
+    }
+    catch (error) {
+      console.log(error)
+      resetScore()
+      return
+    }
+  }
+
+  function resetScore() {
+    setScore({
+      level: 1,
+      currentExperience: 0,
+      challengesCompleted: 0,
     })
   }
 
@@ -86,6 +130,7 @@ export function LoginProvider({ children }: LoginProviderProps) {
       avatarUrl,
       plataform,
       isLogged,
+      score,
       executeLogin,
       executeLogout,
     }}>

@@ -70,8 +70,12 @@ export default function Home(props: HomeProps) {
 // Recebe uma variável context, que por padrão é do tipo "any"
 // Para definir o tipo: informar que o tipo do método "getServerSideProps" é "GetServerSideProps" (importando-o next)
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies
+  //const { level, currentExperience, challengesCompleted } = ctx.req.cookies
 
+  const level = 1
+  const currentExperience = 0
+  const challengesCompleted = 0
+  
   // Este log vai aparecer no terminal do servidor node no backend:
   //console.log('serverSideProps', { level, currentExperience, challengesCompleted })
 

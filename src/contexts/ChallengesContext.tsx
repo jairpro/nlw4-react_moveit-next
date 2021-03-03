@@ -1,8 +1,11 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
+import axios from 'axios'
 
 import challenges from '../../challenges.json'
 import { LevelUpModal } from '../components/LevelUpModal'
+import { LoginContext } from './LoginContext'
+import { ScoreData } from './LoginContext'
 
 interface Challenge {
   type: 'body' | 'eye'
@@ -55,15 +58,31 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
+  const { login, score } = useContext(LoginContext)
+
   useEffect(() => {
     Notification.requestPermission()
   }, [])
 
   useEffect(() => {
-    Cookies.set('level', String(level))
+    
+    /*Cookies.set('level', String(level))
     Cookies.set('currentExperience', String(currentExperience))
-    Cookies.set('challengesCompleted', String(challengesCompleted))
+    Cookies.set('challengesCompleted', String(challengesCompleted))*/
+
+    save()
+    
   }, [level, currentExperience, challengesCompleted])
+
+  useEffect(() => {
+    updateScore(score)
+  }, [score])
+
+  function updateScore(data: ScoreData) {
+    setLevel(data.level ?? level)
+    setCurrentExperience(data.currentExperience ?? currentExperience)
+    setChallengesCompleted(data.challengesCompleted ?? challengesCompleted)
+  }
 
   function levelUp() {
     setLevel(level + 1)
@@ -116,10 +135,33 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     setCurrentExperience(finalExperience)
     setActiveChallenge(null)
     setChallengesCompleted(challengesCompleted + 1)
+
+    //await save()
   }
 
   function closeLevelUpModal() {
     setIsLevelUpModalOpen(false)
+  }
+
+  async function save() {
+    try {
+      const result = await axios.post("/api/save", {
+        login, 
+        level,
+        currentExperience,
+        challengesCompleted
+      })
+
+      if (!result) {
+        return false
+      }
+
+      return result
+    }
+    catch(error) {
+      console.log(error)
+      return false
+    }
   }
 
   return (
