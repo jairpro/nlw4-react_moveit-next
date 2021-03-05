@@ -1,16 +1,22 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
 import axios from 'axios'
-
+import { O_NOFOLLOW } from 'node:constants'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import challenges from '../../challenges.json'
 import { LevelUpModal } from '../components/LevelUpModal'
 import { LoginContext } from './LoginContext'
-import { ScoreData } from './LoginContext'
+import { compareToSortLeaderboard, MongoPratitionersData } from './RankingContext'
+
 
 interface Challenge {
   type: 'body' | 'eye'
   description: string
   amount: number
+}
+
+export interface ScoreData {
+  level: number
+  currentExperience: number
+  challengesCompleted: number
 }
 
 interface ChallengesContextData {
@@ -19,18 +25,22 @@ interface ChallengesContextData {
   experienceToNextLevel: number
   challengesCompleted: number
   activeChallenge: Challenge
+  leaderboard: Array<MongoPratitionersData>
   levelUp: () => void
   startNewChallenge: () => void
   resetChallenge: () => void
   completeChallenge: () => void
   closeLevelUpModal: () => void
+  updateScore: (score: ScoreData) => void
+  resetScore: () => void
+  loadLeaderboard: () => void
 }
 
 interface ChallengesProviderProps {
-  children: ReactNode;
-  level: number
-  currentExperience: number
-  challengesCompleted: number
+  children: ReactNode
+  score: ScoreData
+  userId?: string
+  subscribedAt?: Date
 }
 
 export const ChallengesContext = createContext({} as ChallengesContextData)
@@ -48,37 +58,40 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   //   parece melhor solução que:
   //     v1!==undefined v1 ? : v2"
 
-  const [level, setLevel] = useState(rest.level ?? 1)
-  const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0)
-  const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0)
+  const [level, setLevel] = useState(rest.score.level ?? 1)
+  const [currentExperience, setCurrentExperience] = useState(rest.score.currentExperience ?? 0)
+  const [challengesCompleted, setChallengesCompleted] = useState(rest.score.challengesCompleted ?? 0)
 
   const [activeChallenge, setActiveChallenge] = useState(null)
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
+  
   const [saving, setSaving] = useState(false)
+  const [leaderboard, setLeaderboard] = useState([] as Array<MongoPratitionersData>)
+  const [userId, setUserId] = useState(rest.userId ?? '')
+  const [subscribedAt, setSubscribedAt] = useState(rest.subscribedAt ?? null)
 
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, name, avatarUrl, plataform, score } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform } = useContext(LoginContext)
 
   useEffect(() => {
-    Notification.requestPermission()
+    //Notification.requestPermission()
   }, [])
-
+  
   useEffect(() => {
     if (saving) {
+      updateLeaderboard()
+
       save()
     }
   }, [saving])
 
-  useEffect(() => {
-    updateScore(score)
-  }, [score])
-
-  function updateScore(data: ScoreData) {
-    setLevel(data.level ?? level)
-    setCurrentExperience(data.currentExperience ?? currentExperience)
-    setChallengesCompleted(data.challengesCompleted ?? challengesCompleted)
+  function updateScore(score: ScoreData) {
+    setLevel((score && score.level) ?? level)
+    setCurrentExperience((score && score.currentExperience) ?? currentExperience)
+    setChallengesCompleted((score && score.challengesCompleted) ?? challengesCompleted)
+    return
   }
 
   function levelUp() {
@@ -161,11 +174,16 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
         score,
       })
 
+      //console.log('save result: ', result)
+
       setSaving(false)
 
-      if (!result) {
+      if (!result || !result.data) {
         return false
       }
+      
+      if (result.data._id) setUserId(result.data._id)
+      if (result.data.subcribedAt) setSubscribedAt(result.data.subscribedAt)
 
       return result
     }
@@ -178,6 +196,78 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     }
   }
 
+  function resetScore() {
+    setLevel(1)
+    setCurrentExperience(0)
+    setChallengesCompleted(0)
+  }
+
+  function updateLeaderboard() {
+    let list = leaderboard.slice()
+
+    let exists = false
+    list.map(item => {
+      if (item.avatarUrl === avatarUrl) {
+        exists = true
+        /*console.log('scores to update: ', {
+          level,
+          currentExperience,
+          challengesCompleted,
+        })*/
+
+        item.score = {
+          level,
+          currentExperience,
+          challengesCompleted,
+        }
+      }
+    })
+
+    if (!exists) {
+      list.push({
+        _id: userId,
+        login: login,
+        name: name,
+        avatarUrl: avatarUrl,
+        plataform: plataform,
+        score: {
+          level,
+          currentExperience,
+          challengesCompleted,
+        },
+        subscribedAt: subscribedAt,
+      })
+    }
+
+    list.sort(compareToSortLeaderboard)
+
+    setLeaderboard([...list])
+  }
+  
+  async function loadLeaderboard() {
+    //setLeaderboard([...leaderboardJson])
+    //return
+    
+    try {
+      //console.log('carregar leadboard com axios...')
+      //const response = await axios.get('/api/leaderboard')
+      const response = await axios.get('/api/list')
+  
+      //console.log('leaderboard reponse:', response)
+  
+      if (response && response.data) {
+        let list = response.data
+        setLeaderboard([...list])
+        return
+      }
+    }
+    catch (error) {
+      console.log('load leaderboard error: ', error)
+    }
+
+    setLeaderboard([])
+  }
+
   return (
     <ChallengesContext.Provider value={{
       level,
@@ -185,11 +275,15 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
       experienceToNextLevel,
       challengesCompleted,
       activeChallenge,
+      leaderboard,
       levelUp,
       startNewChallenge,
       resetChallenge,
       completeChallenge,
       closeLevelUpModal,
+      updateScore,
+      resetScore,
+      loadLeaderboard,
     }}>
       {children}
 

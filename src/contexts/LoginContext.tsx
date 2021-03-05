@@ -1,13 +1,14 @@
-import { createContext, ReactNode, useContext, useState } from "react"
 import axios from 'axios'
+import Cookies from 'js-cookie'
+import { createContext, ReactNode, useEffect, useState } from "react"
+import Login from "../pages/Login"
+import { ChallengesProvider, ScoreData } from './ChallengesContext'
+import { MongoPratitionersData } from './RankingContext'
 
-import { Login } from "../components/Login"
-import { ChallengesContext } from "./ChallengesContext"
-
-export interface ScoreData {
-  level: number
-  currentExperience: number
-  challengesCompleted: number
+interface ExecuteLoginData {
+  userLogin: string
+  success?: (user: MongoPratitionersData) => void
+  fail?: (data?: any) => void
 }
 
 interface LoginContextData {
@@ -16,25 +17,42 @@ interface LoginContextData {
   avatarUrl: string
   plataform: string // 'github' | 'facebook' | 'google'
   isLogged: boolean
-  score: ScoreData
-  executeLogin: (userLogin: string) => void
+  hasLogged: boolean
+  executeLogin: (data: ExecuteLoginData) => Promise<boolean>
   executeLogout: () => void
 }
 
 interface LoginProviderProps {
   children: ReactNode
+  login: string
+  isLogged: boolean
+  score: ScoreData
 }
 
 export const LoginContext = createContext({} as LoginContextData)
 
-export function LoginProvider({ children }: LoginProviderProps) {
-  const [login, setLogin] = useState('')
+// Para testes:
+//import leaderboardJson from '../../leaderboard.test.json'
+
+export function LoginProvider({ children, ...rest }: LoginProviderProps) {
+  const [login, setLogin] = useState(rest.login ?? '')
   const [name, setName] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [plataform, setPlataform] = useState('')
-  const [isLogged, setIsLogged] = useState(false)
-  const [score, setScore] = useState({} as ScoreData)
+  const [isLogged, setIsLogged] = useState(rest.isLogged ?? false)
+  const [hasLogged, setHasLogged] = useState(false)
   
+  useEffect(() => {
+    Cookies.set('login', login, {
+      sameSite: 'Lax',
+    })
+
+    Cookies.set('isLogged', String(isLogged), {
+      sameSite: 'Lax',
+    })
+
+  }, [login, isLogged])
+
   /*type GithubData = {
     login: string
     name: string
@@ -44,6 +62,7 @@ export function LoginProvider({ children }: LoginProviderProps) {
 
   async function connectToGithub(userLogin: string) {
     try {
+      userLogin = userLogin.toLowerCase()
       const response = await axios.get(`https://api.github.com/users/${userLogin}`)
 
       //console.log('response:', response)
@@ -63,11 +82,16 @@ export function LoginProvider({ children }: LoginProviderProps) {
     }
   }
 
-  async function executeLogin(userLogin: string) {
-    const user = await connectToGithub(userLogin)
+  async function executeLogin(data: ExecuteLoginData)  {
+    if (!data.userLogin) {
+      alert("Faltou digitar o usuário do Github")
+      return false
+    }
+
+    const user = await connectToGithub(data.userLogin)
 
     if (!user) {
-      alert("Usuário não encontrado")
+      alert(`Usuário ${data.userLogin} não encontrado no Github`);
       return false
     }
 
@@ -76,6 +100,7 @@ export function LoginProvider({ children }: LoginProviderProps) {
     setAvatarUrl(user.avatarUrl)
     setPlataform(user.plataform)
     setIsLogged(true)
+    setHasLogged(true)
 
     //console.log('user: ', user)
 
@@ -86,37 +111,34 @@ export function LoginProvider({ children }: LoginProviderProps) {
 
       if (!result) {
         console.log("Erro ao logar...")
-        resetScore()
-        return
+        if (data.fail) data.fail()
+        return true
       }
 
       if (!result.data) {
         console.log("Login não restornou dados..")
-        resetScore()
-        return
+        if (data.fail) data.fail()
+        return true
       }
 
       if (!result.data.score) {
         console.log("Praticante ainda sem score salvo...")
-        resetScore()
-        return
+        if (data.fail) data.fail(result.data)
+        return true
       }
 
-      setScore(result.data.score)
+      const { score } = result.data 
+      //console.log('O score do user logado é: ', score)
+
+      if (data.success) data.success(result.data)
+
+      return true
     }
     catch (error) {
       console.log(error)
-      resetScore()
-      return
+      if (data.fail) data.fail(error)
+      return false
     }
-  }
-
-  function resetScore() {
-    setScore({
-      level: 1,
-      currentExperience: 0,
-      challengesCompleted: 0,
-    })
   }
 
   function executeLogout() {
@@ -130,13 +152,19 @@ export function LoginProvider({ children }: LoginProviderProps) {
       avatarUrl,
       plataform,
       isLogged,
-      score,
+      hasLogged,
       executeLogin,
       executeLogout,
     }}>
       { isLogged 
         ? children 
-        : <Login />
+        : (
+          <ChallengesProvider
+            score={rest.score}
+          >
+            <Login login={''}/>
+          </ChallengesProvider>
+        )
       }
     </LoginContext.Provider>
   )

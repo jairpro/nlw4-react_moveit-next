@@ -36,7 +36,29 @@ export function CountdownProvider({ children }: CountdownProviderProps) {
 
   function startCountdown() {
     setIsActive(true)
-  }
+
+    if (typeof Notification!== 'undefined' && Notification.permission==='default') {
+      try {
+        /*function doSomething() {
+          //console.log('algo')
+        }*/
+  
+        Notification.requestPermission()
+                //.then(() => doSomething())                                                                                                                                               
+        } catch (error) {
+            // Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
+            // throws a TypeError. It takes a callback as the first argument                                                                                                                                       
+            // instead.
+            if (error instanceof TypeError) {
+                Notification.requestPermission(/*() => {                                                                                                                                                             
+                    doSomething();
+                }*/);
+            } else {
+                throw error;                                                                                                                                                                                       
+            }                                                                                                                                                                                                      
+        } 
+      }
+   }
   
   function resetCountdown() {
     clearInterval(countdownTimeout)

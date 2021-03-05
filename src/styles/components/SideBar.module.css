@@ -29,7 +29,7 @@
 }
 
 .sideBarPages img{
-  margin-bottom: 39px;
+  margin-bottom: 1.25rem;
 }
 
 .sideBarContainer button {
@@ -37,7 +37,7 @@
   color: var(--text);
   border: none;
   font-weight: 600;
-  padding: 8px;
+  padding: 1.25rem;
 }
 
 .sideBarContainer button:focus {
@@ -48,6 +48,6 @@
   color: var(--blue);
 }
 
-.sideBarContainer:hover {
-  color: var(--blue);
+.sideBarContainer .pageButtonActive {
+  color: var(--blue-dark)
 }

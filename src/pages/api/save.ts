@@ -11,14 +11,15 @@ export default async (request: NowRequest, response: NowResponse) => {
 
   const collection = db.collection('practitioners')
 
-  const updatedUser = await collection.updateOne(
+  const updatedCursor = await collection.findOneAndUpdate(
     { login }, {
       $set: { score }
     }
   )
 
-  if (!updatedUser || updatedUser.result.nModified===0) {
-    const newUser = await collection.insertOne({
+  //if (!updatedCursor || updatedCursor.result.nModified===0) {
+  if (!updatedCursor || !updatedCursor.ok) {
+    const newCursor = await collection.insertOne({
       login,
       name: user.name,
       avatarUrl: user.avatarUrl,
@@ -27,8 +28,12 @@ export default async (request: NowRequest, response: NowResponse) => {
       subscribedAt: new Date(),
     })
 
+    const newUser = newCursor.ops[0]
+
     return response.status(201).json(newUser)
   }
+
+  const updatedUser = updatedCursor.value
 
   return response.status(201).json(updatedUser)
 }

@@ -1,0 +1,102 @@
+.rankingContainer {
+  padding-top: 2.5rem;
+  /*padding-left: 18.5rem;*/
+  display: flex;
+  flex-direction: column;
+  /*justify-content: center;*/
+  align-items: center;
+  margin: 0 auto;
+  max-width: 60rem;
+}
+
+.rankingContainer h1 {
+  font-weight: 600;
+  font-size: 2.25rem;
+  line-height: 2.875rem;
+  color: var(--title);
+  margin-bottom: 2.5rem;
+  width: 100%;
+  text-align: left;
+}
+
+.rankingContainer table th {
+  padding-bottom: 1rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.059rem;
+  color: var(--text);
+  text-align: left;
+}
+.rankingContainer table th.rankingProfile span {
+  padding-left: 1.5rem;
+}
+
+.rankingContainer table td {
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.21rem;
+  height: 6rem;
+  padding-bottom: 0.5rem;
+}
+
+.rankingContainer table td > div {
+  text-align: left;
+  background: var(--white);
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+
+.rankingContainer table tr td:first-child > div {
+  justify-content: center;
+  font-size: 1.5rem;
+  line-height: 1.816rem;
+  height: 6rem;
+  padding-bottom: 0.5rem;
+}
+
+.rankingContainer table tbody tr td:first-child {
+  padding-right: 0.25rem;
+  width: 4.5rem;
+}
+
+.rankingContainer table tbody tr td:first-child div
+{
+  border-top-left-radius: 0.313rem;
+  border-bottom-left-radius: 0.313rem;
+}
+
+.rankingContainer table tbody tr td:last-child div {
+  border-top-right-radius: 0.313rem;
+  border-bottom-right-radius: 0.313rem;
+}
+
+.rankingContainer .rankingProfile {
+  width: 33.25rem;
+}
+
+.rankingContainer .rankingProfile > div {
+  background: var(--gray-line);
+  padding-left: 1.5rem;
+  background: var(--white);
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  justify-items: left;
+}
+
+.rankingContainer strong {
+  color: var(--blue);
+  margin-right: 0.25rem;
+}
+
+.rankingProfile div > img {
+  width: 4rem;
+  height: 4rem;
+}
+
+.rankingProfile div strong {
+  font-size: 1.25rem;
+}
