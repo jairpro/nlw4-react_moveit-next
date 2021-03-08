@@ -73,12 +73,33 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, name, avatarUrl, plataform } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform, newScore, resetNewScore } = useContext(LoginContext)
+
+  /*useEffect(() => {
+    //Notification.requestPermission()
+  }, [])*/
 
   useEffect(() => {
-    //Notification.requestPermission()
+    console.log('Current score:', {
+      level, 
+      currentExperience, 
+      challengesCompleted
+    })
+    console.log('Please! update score to:', newScore)
+    if (newScore) {
+      updateScore(newScore)
+      resetNewScore()
+    }
   }, [])
   
+  useEffect(() => {
+    console.log('Tanks!, score updated to:', {
+      level, 
+      currentExperience, 
+      challengesCompleted
+    })
+  }, [level, currentExperience, challengesCompleted])
+
   useEffect(() => {
     if (saving) {
       updateLeaderboard()
@@ -88,13 +109,17 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }, [saving])
 
   function updateScore(score: ScoreData) {
-    setLevel((score && score.level) ?? level)
+    const newLevel = (score && score.level) ?? level
+    console.log('update score: ', score)
+    console.log('newLevel: ', newLevel ) 
+    setLevel(newLevel)
     setCurrentExperience((score && score.currentExperience) ?? currentExperience)
     setChallengesCompleted((score && score.challengesCompleted) ?? challengesCompleted)
     return
   }
 
   function levelUp() {
+    console.log('level up...')
     setLevel(level + 1)
     setIsLevelUpModalOpen(true)
   }
@@ -197,6 +222,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }
 
   function resetScore() {
+    console.log('reset score...')
     setLevel(1)
     setCurrentExperience(0)
     setChallengesCompleted(0)

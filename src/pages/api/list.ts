@@ -1,8 +1,15 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 import { compareToSortLeaderboard } from "../../contexts/RankingContext";
 import { connectToDatabase } from "../../services/mongodb";
+import authMiddleware from '../../middlewares/auth'
 
-export default async (_: NowRequest, response: NowResponse) => {
+export default async (request: NowRequest, response: NowResponse) => {
+
+  const auth = await authMiddleware(request, response)
+
+  if (auth !== true) {
+    return response.status(auth.status).json({ error: auth.error })
+  }
 
   const db = await connectToDatabase(process.env.MONGODB_URI)
 

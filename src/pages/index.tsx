@@ -12,6 +12,7 @@ export interface IndexProps {
   login: string
   isLogged: boolean
   page: string
+  token: string
 }
 
 export default function Index(props: IndexProps) {
@@ -24,19 +25,14 @@ export default function Index(props: IndexProps) {
       login={props.login}
       isLogged={props.isLogged}
       score={props.score}
+      token={props.token}
     >
-      <ChallengesProvider
-        score={props.score}
-      >
-        <RankingProvider>
-          <SideBarProvider
-            page={props.page}
-            >
-            <SideBar />
-            <Pages items={props.pages}/>
-          </SideBarProvider>
-        </RankingProvider>
-      </ChallengesProvider>
+      <RankingProvider>
+        <SideBarProvider page={props.page}>
+          <SideBar />
+          <Pages items={props.pages}/>
+        </SideBarProvider>
+      </RankingProvider>
     </LoginProvider>
   )
 }
@@ -57,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const currentExperience = 0
   const challengesCompleted = 0
 
-  const { login, isLogged, page } = ctx.req.cookies
+  const { login, isLogged, page, moveit_token } = ctx.req.cookies
   
   // Este log vai aparecer no terminal do servidor node no backend:
   //console.log('serverSideProps', { level, currentExperience, challengesCompleted })
@@ -90,6 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       login: login ?? '',
       isLogged: isLogged === 'true',
       page: page ?? 'home',
+      token: moveit_token ?? '',
     }
   }
 }

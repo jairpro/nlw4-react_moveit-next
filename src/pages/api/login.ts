@@ -1,7 +1,14 @@
 import { NowRequest, NowResponse } from '@vercel/node'
 import { connectToDatabase } from '../../services/mongodb'
+import authMiddleware from '../../middlewares/auth'
 
 export default async (request: NowRequest, response: NowResponse) => {
+  const auth = await authMiddleware(request, response)
+
+  if (auth !== true) {
+    return response.status(auth.status).json({ error: auth.error })
+  }
+
   const { user } = request.body
 
   //return response.json(user)

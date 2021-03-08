@@ -1,11 +1,16 @@
 import { NowRequest, NowResponse } from "@vercel/node";
-import { connectToDatabase } from '../../services/mongodb'
+import authMiddleware from '../../middlewares/auth';
+import { connectToDatabase } from '../../services/mongodb';
 
 export default async (request: NowRequest, response: NowResponse) => {
+  const auth = await authMiddleware(request, response)
+
+  if (auth !== true) {
+    return response.status(auth.status).json({ error: auth.error })
+  }
+
   const { user, score } = request.body
   const { login } = user
-
-  //console.log('salvando...')
 
   const db = await connectToDatabase(process.env.MONGODB_URI)
 
@@ -17,7 +22,6 @@ export default async (request: NowRequest, response: NowResponse) => {
     }
   )
 
-  //if (!updatedCursor || updatedCursor.result.nModified===0) {
   if (!updatedCursor || !updatedCursor.ok) {
     const newCursor = await collection.insertOne({
       login,
@@ -35,5 +39,5 @@ export default async (request: NowRequest, response: NowResponse) => {
 
   const updatedUser = updatedCursor.value
 
-  return response.status(201).json(updatedUser)
+  return response.status(200).json(updatedUser)
 }
