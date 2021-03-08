@@ -9,6 +9,10 @@
   flex-direction: row;
 }
 
+.loginContainer a {
+  transition: background-color 0.2s;
+}
+
 .loginSimbol {
   position: absolute;
   width: auto;
@@ -28,40 +32,63 @@
 .loginForm {
   display: flex;
   flex-direction: column;
+  justify-content: left;
   position: absolute;
   right: 12rem;
   top: 9rem;
+  width: 400px;
 }
 
-.loginForm img {
-  margin-bottom: 3.5rem;
+.loginForm > img {
   width: 19rem;
+  margin-bottom: 3.5rem;
 }
 
 .loginForm h1 {
   font-weight: 600;
   font-size: 1.9rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.loginPlataform {
+.loginPlataform  {
+  margin-bottom: 3rem;
+}
+
+.loginPlataform a {
   color: var(--text-blue);
+  
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 0rem;
+  transition: 0.2s;
+}
+
+.loginPlataform span {
   font-weight: 500;
   line-height: 1.8rem;
   font-size: 1.2rem;
-  width: 20rem;
-
-  display: flex;
-  flex-direction: row;
-
-  margin-bottom: 0rem;
 }
 
-.loginPlataform img {
-  width: 2.5rem;
+.loginContainer a:hover {
+  color: var(--white);
+  background: var(--border);
+  border-radius: 5px;
+  padding: 0.5rem 0.5rem;
+}
+
+.loginPlataform a:hover {
+  color: var(--github-text);
+  background: var(--github);
+  border-radius: 5px;
+  padding: 0.5rem 0.5rem;
+}
+
+.loginPlataform svg {
   margin-right: 1.5rem;
-  flex: 1;
-  padding-top: 0.6rem;
+  transition: transform 0.2s;
+}
+.loginPlataform:hover svg {
+  transform: scaleX(-1);
 }
 
 .loginInput {
@@ -72,16 +99,19 @@
 .loginInput input {
   background: linear-gradient(90deg, #4953B8 0%, rgba(73, 83, 184, 0.2) 100%);
   border-radius: 5px 0px 0px 5px;
+  border: 0.1rem solid linear-gradient(90deg, #4953B8 0%, rgba(73, 83, 184, 0.2) 100%);;
   border: none;
+  border: 1.1rem none transparent;
   padding: 1.2rem;
   font-size: 0.9rem;
   color: var(--white);
+  transition: border 0.2s;
   /*transition: 0.2s;*/
 }
 
 .loginInput input:hover, .loginInput input:focus {
   outline: none;
-  border: 0.1rem solid #414AA3;
+  border: 0.1rem solid var(--border);
   padding: 1.1rem;
 }
 
@@ -102,6 +132,7 @@
   border-radius: 0px 5px 5px 0px;
 
   transition: filter 0.2s;
+  transition: background-color 0.2s;
 }
 
 .loginInput button:hover {

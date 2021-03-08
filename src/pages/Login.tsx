@@ -5,7 +5,8 @@ import EnterWithGithubLink from '../components/EnterWithGithubLink'
 import { ChallengesContext } from '../contexts/ChallengesContext'
 import { LoginContext } from '../contexts/LoginContext'
 import styles from '../styles/pages/Login.module.css'
-import login from './api/login'
+
+import { GoMarkGithub } from 'react-icons/go'
 
 interface LoginProps {
   login: string
@@ -62,16 +63,16 @@ export default function Login(props: LoginProps) {
 
         <h1>Bem-vindo</h1>
 
-          <EnterWithGithubLink>
-            <div className={styles.loginPlataform}>
-              <img src="/icons/github.svg" alt="Github"/>
+          <div className={styles.loginPlataform}>
+            <EnterWithGithubLink>
+              <GoMarkGithub size={62} transform="scaleX(-1)" />
 
               <span>
-                Faça login com seu Github
+                Faça login com seu Github<br/>
                 para começar
               </span>
-            </div>
-          </EnterWithGithubLink>
+            </EnterWithGithubLink>
+          </div>
 
         <div className={styles.loginInput}>
           <input 

@@ -212,6 +212,11 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     console.log('executeLogin response: ', response)
 
     if (!response) {
+      setToken('')
+      Cookies.remove('moveit_token')
+      setIsLogged(false)
+      setHasLogged(false)
+
       if (data.fail) data.fail()
       finalize()
       return false

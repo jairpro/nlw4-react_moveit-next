@@ -17,6 +17,9 @@
   --blue: #5965E0;
   --blue-dark: #4953B8;
   --blue-twitter: #2AA9E0;
+  --border: #414AA3;
+  --github: #24292e;
+  --github-text: #fff
 }
 
 @media(max-width: 1080px) {

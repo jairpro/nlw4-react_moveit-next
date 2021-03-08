@@ -3,6 +3,7 @@ import { O_NOFOLLOW } from 'node:constants'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import challenges from '../../challenges.json'
 import { LevelUpModal } from '../components/LevelUpModal'
+import api from '../services/api'
 import { LoginContext } from './LoginContext'
 import { compareToSortLeaderboard, MongoPratitionersData } from './RankingContext'
 
@@ -194,7 +195,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
         challengesCompleted
       }
 
-      const result = await axios.post("/api/save", {
+      const result = await api.post("/api/save", {
         user, 
         score,
       })
@@ -277,7 +278,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     try {
       //console.log('carregar leadboard com axios...')
       //const response = await axios.get('/api/leaderboard')
-      const response = await axios.get('/api/list')
+      const response = await api.get('/api/list')
   
       //console.log('leaderboard reponse:', response)
   
