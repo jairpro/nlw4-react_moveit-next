@@ -1,7 +1,7 @@
 
 import Head from 'next/head'
 import { KeyboardEvent, useContext, useState } from 'react'
-import EnterWithGithubLink from '../components/EnterWithGithubLink'
+import EnterWithGithubLink, { loadHref } from '../components/EnterWithGithubLink'
 import { ChallengesContext } from '../contexts/ChallengesContext'
 import { LoginContext } from '../contexts/LoginContext'
 import styles from '../styles/pages/Login.module.css'
@@ -24,9 +24,9 @@ export default function Login(props: LoginProps) {
     setUserName(event.target.value)
   }
 
-  function handleClick() {
+  async function handleClick() {
     //console.log('chama github no botão de login...')
-    executeLogin({
+    /*executeLogin({
        userLogin: userName,
        token, 
        success: user => {
@@ -34,11 +34,14 @@ export default function Login(props: LoginProps) {
          updateScore(user.score)
        },
        fail: resetScore
-    })
+    })*/
+    const href = await loadHref()
+    if (href) {
+      window.location.href = `${href}&login=${userName}`
+    }
   }
 
-
-  function handleLogin() {
+  /*function handleLogin() {
     //console.log('chama github no botão de login...')
     executeLogin({
        userLogin: login,
@@ -46,7 +49,7 @@ export default function Login(props: LoginProps) {
        success: user => updateScore(user.score), 
        fail: resetScore
     })
-  }
+  }*/
   
   function handleEnter(event: KeyboardEvent) {
     if (event.code === 'Enter') {
@@ -84,7 +87,7 @@ export default function Login(props: LoginProps) {
           <input 
 
             type="text"
-            placeholder="Digite seu username"
+            placeholder="Ou digite outro username"
             onChange={handleChange}
             onKeyDown={handleEnter}
             value={userName}

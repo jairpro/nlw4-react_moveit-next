@@ -184,6 +184,8 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
   function executeLogout() {
     setIsLogged(false)
+    setToken('')
+    Cookies.remove("token")
   } 
 
   function resetNewScore() {
