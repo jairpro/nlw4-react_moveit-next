@@ -2,7 +2,7 @@ import { ExecuteLoginData } from '../../contexts/LoginContext'
 import api from '../api'
 
 export default async function getApiLogin(data: ExecuteLoginData) {
-  console.log('getApiLogin data: ', data)
+  //console.log('getApiLogin data: ', data)
 
   const { token, userLogin: login } = data
 
@@ -20,7 +20,7 @@ export default async function getApiLogin(data: ExecuteLoginData) {
 
       //const { score } = result.data 
       //console.log('O score do user logado é: ', score)
-      console.log('getApilogin result.data: ', result.data)
+      //console.log('getApilogin result.data: ', result.data)
 
       return result.data
     }

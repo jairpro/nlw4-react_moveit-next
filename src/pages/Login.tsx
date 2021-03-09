@@ -9,14 +9,16 @@ import styles from '../styles/pages/Login.module.css'
 import { GoMarkGithub } from 'react-icons/go'
 
 interface LoginProps {
-  login: string
+  login?: string
 }
 
 export default function Login(props: LoginProps) {
-  const { executeLogin, token, login } = useContext(LoginContext)
+  const { executeLogin, token, login, updateNewScore } = useContext(LoginContext)
   const { updateScore, resetScore} = useContext(ChallengesContext)
 
   const [userName, setUserName] = useState(props.login ?? '')
+
+  const appLogin = false
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUserName(event.target.value)
@@ -27,7 +29,10 @@ export default function Login(props: LoginProps) {
     executeLogin({
        userLogin: userName,
        token, 
-       success: user => updateScore(user.score), 
+       success: user => {
+         updateNewScore(user.score)
+         updateScore(user.score)
+       },
        fail: resetScore
     })
   }
@@ -74,8 +79,10 @@ export default function Login(props: LoginProps) {
             </EnterWithGithubLink>
           </div>
 
-        <div className={styles.loginInput}>
+        { appLogin && (
+          <div className={styles.loginInput}>
           <input 
+
             type="text"
             placeholder="Digite seu username"
             onChange={handleChange}
@@ -90,6 +97,7 @@ export default function Login(props: LoginProps) {
             <img src="/icons/login.svg" alt="Entrar"/>
           </button>
         </div>
+      ) }
       </div>
     </div>
   )

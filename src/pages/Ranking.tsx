@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { useContext } from 'react'
 import { Profile } from '../components/Profile'
 import { ChallengesContext } from '../contexts/ChallengesContext'
@@ -12,6 +13,9 @@ export default function Ranking() {
 
   return (
     <div className={styles.rankingContainer}>
+      <Head>
+        <title>Ranking | move.it</title>
+      </Head>
 
       <div>
         <h1>Leaderboard</h1>

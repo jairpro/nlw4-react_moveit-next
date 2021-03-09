@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Pages, PagesItemsProps } from '../components/Pages';
 import { SideBar } from '../components/SideBar';
-import { ChallengesProvider, ScoreData } from '../contexts/ChallengesContext';
+import { ScoreData } from '../contexts/ChallengesContext';
 import { LoginProvider } from '../contexts/LoginContext';
 import { RankingProvider } from '../contexts/RankingContext';
 import { SideBarProvider } from '../contexts/SideBarContext';
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const currentExperience = 0
   const challengesCompleted = 0
 
-  const { login, isLogged, page, moveit_token } = ctx.req.cookies
+  const { login, isLogged, page, token } = ctx.req.cookies
   
   // Este log vai aparecer no terminal do servidor node no backend:
   //console.log('serverSideProps', { level, currentExperience, challengesCompleted })
@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       login: login ?? '',
       isLogged: isLogged === 'true',
       page: page ?? 'home',
-      token: moveit_token ?? '',
+      token: token ?? '',
     }
   }
 }

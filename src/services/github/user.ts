@@ -29,10 +29,10 @@ export async function getGithubUser(accesToken: GithubAccessTokenResponse) {
       return false
     }
 
-    console.log('axios.get https://api.github.com/user resposta: ', {
+    /*console.log('axios.get https://api.github.com/user resposta: ', {
       status: response.status,
       data: response.data
-    })
+    })*/
     
     return response
   }

@@ -1,12 +1,10 @@
-import axios from 'axios'
-import { O_NOFOLLOW } from 'node:constants'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import challenges from '../../challenges.json'
 import { LevelUpModal } from '../components/LevelUpModal'
 import api from '../services/api'
+import getApiLogin from '../services/api/login'
 import { LoginContext } from './LoginContext'
 import { compareToSortLeaderboard, MongoPratitionersData } from './RankingContext'
-
 
 interface Challenge {
   type: 'body' | 'eye'
@@ -74,32 +72,56 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, name, avatarUrl, plataform, newScore, resetNewScore } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform, newScore, resetNewScore, token } = useContext(LoginContext)
+
+  //const { executeLogin } = useContext(LoginContext)
 
   /*useEffect(() => {
     //Notification.requestPermission()
   }, [])*/
 
+  async function getScore() {
+    //console.log('login: ', login)
+    //console.log('token: ', token)
+    const responseLogin = await getApiLogin({
+      token,
+      userLogin: login,
+    })
+    
+    if (responseLogin) {
+      //console.log('responseLogin.score: ', responseLogin.score)
+      updateScore(responseLogin.score)
+    }
+  }
+
   useEffect(() => {
-    console.log('Current score:', {
+    /*console.log('Current score:', {
       level, 
       currentExperience, 
       challengesCompleted
-    })
-    console.log('Please! update score to:', newScore)
+    })*/
+    
+    if (!newScore) {
+      getScore()
+      return
+      ///executeLogin()
+    }
+
+    //console.log('Please! update score to:', newScore)
+
     if (newScore) {
       updateScore(newScore)
       resetNewScore()
     }
   }, [])
   
-  useEffect(() => {
+  /*useEffect(() => {
     console.log('Tanks!, score updated to:', {
       level, 
       currentExperience, 
       challengesCompleted
     })
-  }, [level, currentExperience, challengesCompleted])
+  }, [level, currentExperience, challengesCompleted])*/
 
   useEffect(() => {
     if (saving) {
@@ -111,8 +133,11 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
   function updateScore(score: ScoreData) {
     const newLevel = (score && score.level) ?? level
-    console.log('update score: ', score)
-    console.log('newLevel: ', newLevel ) 
+
+    //console.log('update score')
+    //console.log('update score: ', score)
+    //console.log('newLevel: ', newLevel ) 
+
     setLevel(newLevel)
     setCurrentExperience((score && score.currentExperience) ?? currentExperience)
     setChallengesCompleted((score && score.challengesCompleted) ?? challengesCompleted)
@@ -120,7 +145,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }
 
   function levelUp() {
-    console.log('level up...')
+    //console.log('level up...')
     setLevel(level + 1)
     setIsLevelUpModalOpen(true)
   }
@@ -223,7 +248,8 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }
 
   function resetScore() {
-    console.log('reset score...')
+    //console.log('reset score...')
+    
     setLevel(1)
     setCurrentExperience(0)
     setChallengesCompleted(0)

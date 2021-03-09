@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import { redirect } from 'next/dist/next-server/server/api-utils'
 import { createContext, ReactNode, useEffect, useState } from "react"
 import Loader from '../components/Loader'
 import Login from "../pages/Login"
@@ -29,6 +28,7 @@ interface LoginContextData {
   executeLogin: (data: ExecuteLoginData) => Promise<boolean>
   executeLogout: () => void
   resetNewScore: () => void
+  updateNewScore: (score: ScoreData) => void
 }
 
 interface LoginProviderProps {
@@ -52,7 +52,6 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
   const [plataform, setPlataform] = useState('')
   const [isLogged, setIsLogged] = useState(rest.isLogged ?? false)
   const [hasLogged, setHasLogged] = useState(false)
-  const [authModal, setAuthModal] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [token, setToken] = useState(rest.token)
   const [newScore, setNewScore] = useState(null)
@@ -63,10 +62,10 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       window.location.href = window.location.href.substr(0,window.location.href.indexOf('?')-1)
     }
 
-    console.log('LoginContext useEffect mount init')
+    //console.log('LoginContext useEffect mount init')
     
     if (rest.token) {
-      //setHasLogged(true)
+        //setHasLogged(true)
       return
     }
     setIsLoading(true)
@@ -97,13 +96,11 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       return
     }
 
-    console.log('access_token: ', access_token)
+    //console.log('access_token: ', access_token)
+
     setToken(access_token)
 
-    /*const json = JSON.parse(Cookies.get('moveit'))
-    json.token = access_token
-    Cookies.set('moveit_token', JSON.stringify(json))*/
-    Cookies.set('moveit_token', access_token)
+    Cookies.set('token', access_token)
     
     const responseUser = await getApiGithubUser(responseToken)
     
@@ -116,23 +113,10 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     setLogin(responseUser.login)
     setName(responseUser.name)
     setAvatarUrl(responseUser.avatar_url)
-
+    
     if (responseUser.login) {
       setIsLogged(true)
-      //setHasLogged(true)
     }
-
-    /*const responseLogin = await getApiLogin({
-      userLogin: responseUser.login,
-      token: access_token,
-      success: user => {
-        console.log('Usuario logado: ',user)
-      }
-    })
-
-    if (!responseLogin) {
-      setIsLoading(false)
-    }*/
 
     setIsLoading(false)
     redirect()
@@ -153,61 +137,10 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
   }, [login, isLogged])
 
-  /*type GithubData = {
-    login: string
-    name: string
-    avatarUrl: string
-    plataform: string 
-  }*/
-
-  /*async function connectToGithub(userLogin: string) {
-    try {
-      userLogin = userLogin.toLowerCase()
-      const response = await axios.get(`https://api.github.com/users/${userLogin}`)
-
-      //console.log('response:', response)
-
-      const dataAvatarUrl = `https://github.com/${userLogin}.png` ?? response.data.avatar_url
-  
-      return { 
-        login: userLogin, 
-        name: response.data.name, 
-        avatarUrl: dataAvatarUrl,
-        plataform: 'github',
-      }
-    }
-    catch(error) {
-      //console.log('error:', error)
-      return
-    }
-  }*/
-
-  /*async function authGithub(login: string) {
-    try {
-      const response = await axios.get('/api/sessions/github', {
-        data: login
-      })
-
-      if (!response) {
-        console.log('/api/sessions/github não retornou dados')
-        return false
-      }
-
-      //console.log('Resposta de /api/session/github: ', response)
-
-      return response.data
-    }
-    catch(error) {
-      console.log('authGithub error: ', error)
-      return false
-    }
-  }
-  */
-
   async function executeLogin(data: ExecuteLoginData)  {
     const hasLoading = isLoading
 
-    console.log('execute login')
+    //console.log('execute login')
 
     setIsLoading(true)
 
@@ -219,11 +152,11 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
     const response: MongoPratitionersData = await getApiLogin(data)
 
-    console.log('executeLogin response: ', response)
+    //console.log('executeLogin response: ', response)
 
     if (!response) {
       setToken('')
-      Cookies.remove('moveit_token')
+      Cookies.remove('token')
       setIsLogged(false)
       setHasLogged(false)
 
@@ -238,6 +171,8 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     setPlataform(response.plataform)
     setHasLogged(true)
     setIsLogged(true)
+
+    //console.log('setNewScore on executeLogin')
     setNewScore(response.score)
 
     if (data.success) data.success(response)
@@ -245,97 +180,6 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     finalize()
 
     return true
-    /*
-    if (!data.userLogin) {
-      alert("Faltou digitar o usuário do Github")
-      return false
-    }
-
-    //const user = await connectToGithub(data.userLogin)
-    const githubModal = await authGithub(data.userLogin)
-
-    if (!githubModal) {
-      alert('Erro no Github')
-      return false
-    }
-
-    setAuthModal(githubModal)
-
-    return true
-    */
-
-    /*
-    if (!user) {
-      alert(`Usuário ${data.userLogin} não encontrado no Github`);
-      return false
-    }
-
-    const token = JwtSign(payload)
-
-    if (!token) {
-      alert('Falha no sistema de autenticação')
-      setLogin('')
-      setName('')
-      setAvatarUrl('')
-      setPlataform('')
-      setIsLogged(false)
-      setHasLogged(false)
-      return false
-    }
-
-    setLogin(user.login)
-    setName(user.name)
-    setAvatarUrl(user.avatarUrl)
-    setPlataform(user.plataform)
-    setIsLogged(true)
-    setHasLogged(true)
-
-    //console.log('user: ', user)
-
-    const payload = {
-      login: user.login,
-    }
-    
-    api.defaults.headers.Authorization = `Bearer ${token}`
-
-    try {
-      const result = await api.get('/api/login', {
-        data: {
-          user, 
-        }
-      })
-
-      if (!result) {
-        console.log("Erro ao logar...")
-        if (data.fail) data.fail()
-        return true
-      }
-
-      if (!result.data) {
-        console.log("Login não restornou dados..")
-        if (data.fail) data.fail()
-        return true
-      }
-
-      if (!result.data.score) {
-        console.log("Praticante ainda sem score salvo...")
-        if (data.fail) data.fail(result.data)
-        return true
-      }
-
-      const { score } = result.data 
-      //console.log('O score do user logado é: ', score)
-
-      if (data.success) data.success(result.data)
-
-      return true
-    }
-    catch (error) {
-      console.log(error)
-      if (data.fail) data.fail(error)
-      return false
-    }
-    */
   }
 
   function executeLogout() {
@@ -344,6 +188,12 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
   function resetNewScore() {
     setNewScore(null)
+  }
+
+  function updateNewScore(score: ScoreData) {
+    //console.log('update new score')
+    
+    setNewScore(score)
   }
 
   return (
@@ -360,21 +210,17 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       executeLogin,
       executeLogout,
       resetNewScore,
+      updateNewScore,
     }}>
-      { isLoading
-        ? (<Loader />)
-        : (
-          <ChallengesProvider score={rest.score}>
-            { isLogged ? ( 
-              children
-            ) : ( 
-              !authModal 
-                ? (<Login login={''}/>)
-                : (authModal)
-            )}
-          </ChallengesProvider>
-        )
-      }
+      <ChallengesProvider score={rest.score}>
+        { isLoading
+          ? (<Loader />)
+          : ( isLogged 
+            ? ( children) 
+            : ( <Login /> )
+          )
+        }
+      </ChallengesProvider>
     </LoginContext.Provider>
   )
 }

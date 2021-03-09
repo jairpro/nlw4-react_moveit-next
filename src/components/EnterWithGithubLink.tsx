@@ -44,7 +44,7 @@ export default function EnterWithGithubLink({children, ...rest}: EnterWithGithub
   const router = useRouter()
   const style = {}
 
-  const { token, executeLogin, login } = useContext(LoginContext)
+  const { token, executeLogin, login, updateNewScore } = useContext(LoginContext)
 
   const handleClick = async (e: any) => {
     e.preventDefault()
@@ -52,8 +52,8 @@ export default function EnterWithGithubLink({children, ...rest}: EnterWithGithub
       const result = await executeLogin({
         token,
         userLogin: login,
-        success: _ => {
-          console.log('login success')
+        success: user => {
+          updateNewScore(user.score)
         }
       })
       if (result) {

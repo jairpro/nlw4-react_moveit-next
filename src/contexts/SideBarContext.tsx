@@ -23,9 +23,11 @@ export function SideBarProvider({ children, ...rest }: SideBarProviderProps) {
   const { updateScore, resetScore, loadLeaderboard } = useContext(ChallengesContext)
 
   useEffect(() => {
-    console.log('SideBarContext useEffect')
+    //console.log('SideBarContext useEffect')
+
     if (isLogged && !hasLogged) {
-      console.log('executeLogin com token: ', token)
+      //console.log('executeLogin com token: ', token)
+      
       executeLogin({
         userLogin: login,
         token,
