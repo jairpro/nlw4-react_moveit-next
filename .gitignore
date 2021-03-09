@@ -34,3 +34,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# customization
+/public/privacy/index.html
