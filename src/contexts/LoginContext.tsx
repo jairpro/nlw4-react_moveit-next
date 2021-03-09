@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { redirect } from 'next/dist/next-server/server/api-utils'
 import { createContext, ReactNode, useEffect, useState } from "react"
 import Loader from '../components/Loader'
 import Login from "../pages/Login"
@@ -57,6 +58,11 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
   const [newScore, setNewScore] = useState(null)
   
   async function init() {
+
+    function redirect() {
+      window.location = window.location.href.substr(0,window.location.href.indexOf('?')-1)
+    }
+
     console.log('LoginContext useEffect mount init')
     
     if (rest.token) {
@@ -79,6 +85,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     
     if (!responseToken) {
       setIsLoading(false)
+      redirect()
       return
     }
     
@@ -86,6 +93,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     
     if (!access_token) {
       setIsLoading(false)
+      redirect()
       return
     }
 
@@ -101,6 +109,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     
     if (!responseUser) {
       setIsLoading(false)
+      redirect()
       return
     }
     
@@ -126,6 +135,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     }*/
 
     setIsLoading(false)
+    redirect()
   }
 
   useEffect(function mount() {
