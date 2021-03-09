@@ -100,7 +100,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
     setToken(access_token)
 
-    Cookies.set('token', access_token)
+    Cookies.set('token', access_token, { sameSite: 'Lax' })
     
     const responseUser = await getApiGithubUser(responseToken)
     
