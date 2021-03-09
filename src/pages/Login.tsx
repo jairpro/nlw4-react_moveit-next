@@ -65,7 +65,7 @@ export default function Login(props: LoginProps) {
 
           <div className={styles.loginPlataform}>
             <EnterWithGithubLink>
-              <GoMarkGithub size={62} transform="scaleX(-1)" />
+              <GoMarkGithub size={62} />
 
               <span>
                 Faça login com seu Github<br/>
