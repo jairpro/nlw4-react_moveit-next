@@ -60,7 +60,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
   async function init() {
 
     function redirect() {
-      window.location = window.location.href.substr(0,window.location.href.indexOf('?')-1)
+      window.location.href = window.location.href.substr(0,window.location.href.indexOf('?')-1)
     }
 
     console.log('LoginContext useEffect mount init')

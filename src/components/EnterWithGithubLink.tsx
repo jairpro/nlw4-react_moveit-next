@@ -1,8 +1,6 @@
 import axios from "axios"
-import Cookies from "js-cookie"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
-import { ChallengesContext } from "../contexts/ChallengesContext"
 import { LoginContext } from "../contexts/LoginContext"
 
 interface EnterWithGithubLinkProps {
@@ -11,19 +9,26 @@ interface EnterWithGithubLinkProps {
   onClick?: (e: any) => void
 }
 
+export async function loadHref() {
+  try {
+    const response = await axios.get('/api/github/url')
+    if (response && response.data) {
+      return response.data
+    }
+  }
+  catch(error) {
+    console.log('Error on axios get /api/github/url: ', error)
+  }
+  return false
+}
+
 export default function EnterWithGithubLink({children, ...rest}: EnterWithGithubLinkProps) {
   const [href, setHref] = useState('')
 
-  async function loadHref() {
-    try {
-      const response = await axios.get('/api/github/url')
-      if (!response || !response.data) {
-        return
-      }
-      setHref(response.data)
-    }
-    catch(error) {
-      console.log('Error on axios get /api/github/url: ', error)
+  async function updateHref() {
+    const result = await loadHref()
+    if (result) {
+      setHref(result)
     }
   }
 
@@ -32,7 +37,8 @@ export default function EnterWithGithubLink({children, ...rest}: EnterWithGithub
       setHref(rest.href)
       return
     }
-    loadHref()
+
+    updateHref()    
   }, [])
 
   const router = useRouter()
@@ -40,17 +46,19 @@ export default function EnterWithGithubLink({children, ...rest}: EnterWithGithub
 
   const { token, executeLogin, login } = useContext(LoginContext)
 
-  const handleClick = (e: any) => {
+  const handleClick = async (e: any) => {
     e.preventDefault()
     if (token) {
-      executeLogin({
+      const result = await executeLogin({
         token,
         userLogin: login,
         success: _ => {
           console.log('login success')
         }
       })
-      return
+      if (result) {
+        return
+      }
     }
     router.push(href)
   }
