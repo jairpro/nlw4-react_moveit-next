@@ -1,5 +1,5 @@
 import { createContext, ReactNode } from "react"
-import { ScoreData } from "./ChallengesContext"
+import { ScoreData } from "./ScoreContext"
 
 export function compareToSortLeaderboard(a: MongoPratitionersData, b: MongoPratitionersData) {
   if (a.score.level<b.score.level) return 1

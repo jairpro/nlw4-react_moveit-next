@@ -1,13 +1,13 @@
 .sideBarContainer {
-  position: absolute;
+  /*position: absolute;*/
   
   width: 14rem;
   width: 112px;
   
-  left: 0px;
-  top: 0px;
+  /*left: 0px;
+  top: 0px;*/
   
-  height: 100vh;
+  /*height: 100vmax;*/
   
   background: var(--white);
   color: var(--text);

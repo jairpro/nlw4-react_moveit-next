@@ -5,7 +5,7 @@ import authMiddleware from '../../middlewares/auth'
 export default async (request: NowRequest, response: NowResponse) => {
   const auth = await authMiddleware(request, response)
 
-  if (auth !== true) {
+  if (typeof auth === 'object') {
     return response.status(auth.status).json({ error: auth.error })
   }
 

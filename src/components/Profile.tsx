@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { ChallengesContext } from '../contexts/ChallengesContext'
 import { LoginContext } from '../contexts/LoginContext'
+import { ScoreContext } from '../contexts/ScoreContext'
 import styles from '../styles/components/Profile.module.css'
 
 interface ProfileProps {
@@ -11,7 +11,7 @@ interface ProfileProps {
 
 export function Profile(props: ProfileProps) {
   const { name, avatarUrl } = useContext(LoginContext)
-  const { level } = useContext(ChallengesContext)
+  const { level } = useContext(ScoreContext)
 
   const data = {
     name: props.name ?? name,

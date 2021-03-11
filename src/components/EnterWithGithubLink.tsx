@@ -2,6 +2,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { LoginContext } from "../contexts/LoginContext"
+import { ScoreContext } from "../contexts/ScoreContext"
 
 interface EnterWithGithubLinkProps {
   children: any
@@ -25,6 +26,8 @@ export async function loadHref() {
 export default function EnterWithGithubLink({children, ...rest}: EnterWithGithubLinkProps) {
   const [href, setHref] = useState('')
 
+  const { updatePlataform } = useContext(LoginContext)
+
   async function updateHref() {
     const result = await loadHref()
     if (result) {
@@ -44,16 +47,19 @@ export default function EnterWithGithubLink({children, ...rest}: EnterWithGithub
   const router = useRouter()
   const style = {}
 
-  const { token, executeLogin, login, updateNewScore } = useContext(LoginContext)
+  const { token, executeLogin, login } = useContext(LoginContext)
+  const { updateScore } = useContext(ScoreContext)
 
   const handleClick = async (e: any) => {
     e.preventDefault()
+    updatePlataform('github')
     if (token) {
       const result = await executeLogin({
         token,
         userLogin: login,
+        plataform: 'github',
         success: user => {
-          updateNewScore(user.score)
+          updateScore(user.score)
         }
       })
       if (result) {

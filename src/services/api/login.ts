@@ -2,15 +2,16 @@ import { ExecuteLoginData } from '../../contexts/LoginContext'
 import api from '../api'
 
 export default async function getApiLogin(data: ExecuteLoginData) {
-  //console.log('getApiLogin data: ', data)
-
-  const { token, userLogin: login } = data
-
-  api.defaults.headers.Authorization = `Bearer ${token}`
-
   try {
+    //console.log('getApiLogin data: ', data)
+
+    const { token, userLogin: login, plataform } = data
+
+    api.defaults.headers.Authorization = `Bearer ${token}`
+
     const result = await api.post('/api/login', {
-      user: { login }
+      user: { login },
+      plataform,
     })
 
     if (result && result.data) {

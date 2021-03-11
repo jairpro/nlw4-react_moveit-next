@@ -1,0 +1,47 @@
+.loginFacebookContainer {
+  background: transparent;
+  margin-bottom: .5rem;
+}
+
+.loginFacebookContainer button {
+  background: transparent;
+  color: var(--text-blue);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 6px;
+  border: 0;
+
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 3rem;
+  padding: 0.5rem 0rem;
+
+  outline: none;
+
+  /* transition: 200ms cubic-bezier(.08,.52,.52,1) background-color, 200ms cubic-bezier(.08,.52,.52,1) box-shadow, 200ms cubic-bezier(.08,.52,.52,1) transform;*/
+  transition: 0.2s;
+}
+
+.loginFacebookContainer button:hover {
+  background: var(--facebook-text);
+  color: var(--facebook-new-dark);
+  color: var(--facebook-text);
+  padding: 0.5rem 1rem;
+  background: linear-gradient(180deg, rgba(24,173,254,1) 0%, rgba(0,98,224,1) 100%);
+}
+
+.loginFacebookContainer svg {
+  margin-right: 1rem;
+}
+
+.loginFacebookContainer  button:hover svg {
+  /*color: rgb(24,173,254);*/
+  /*background: rgb(24,173,254);
+  background: linear-gradient(180deg, rgba(24,173,254,1) 0%, rgba(0,98,224,1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;*/
+}

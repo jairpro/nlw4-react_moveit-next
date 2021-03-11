@@ -3,7 +3,7 @@
   color: var(--white);
 
   flex: 1;
-  height: 100vh;
+  height: 100vmax;
 
   display: flex;
   flex-direction: row;
@@ -52,42 +52,48 @@
 
 .loginPlataform  {
   margin-bottom: 3rem;
+  margin-bottom: .5rem;
 }
 
 .loginPlataform a {
   color: var(--text-blue);
   
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
   padding: 0.5rem 0rem;
   transition: 0.2s;
 }
 
 .loginPlataform span {
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.8rem;
+  line-height: 3rem;
   font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
-.loginContainer a:hover {
+/*.loginContainer a:hover {
   color: var(--white);
   background: var(--border);
   border-radius: 5px;
   padding: 0.5rem 0.5rem;
-}
+}*/
 
 .loginPlataform a:hover {
   color: var(--github-text);
   background: var(--github);
   border-radius: 5px;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 1rem;
 }
 
 .loginPlataform svg {
-  margin-right: 1.5rem;
+  margin-right: 1rem;
   transition: transform 0.2s;
 }
-.loginPlataform:hover svg {
+.loginPlataform a:hover svg {
   transform: scaleX(-1);
 }
 

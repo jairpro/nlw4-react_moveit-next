@@ -1,21 +1,18 @@
 
 import Head from 'next/head'
-import { KeyboardEvent, useContext, useState } from 'react'
+import { KeyboardEvent, useState } from 'react'
+import { GoMarkGithub } from 'react-icons/go'
 import EnterWithGithubLink, { loadHref } from '../components/EnterWithGithubLink'
-import { ChallengesContext } from '../contexts/ChallengesContext'
-import { LoginContext } from '../contexts/LoginContext'
+import LoginFacebook from '../components/LoginFacebook'
 import styles from '../styles/pages/Login.module.css'
 
-import { GoMarkGithub } from 'react-icons/go'
 
 interface LoginProps {
   login?: string
+  fbAppId? : string
 }
 
 export default function Login(props: LoginProps) {
-  const { executeLogin, token, login, updateNewScore } = useContext(LoginContext)
-  const { updateScore, resetScore} = useContext(ChallengesContext)
-
   const [userName, setUserName] = useState(props.login ?? '')
 
   const appLogin = false
@@ -25,32 +22,12 @@ export default function Login(props: LoginProps) {
   }
 
   async function handleClick() {
-    //console.log('chama github no botão de login...')
-    /*executeLogin({
-       userLogin: userName,
-       token, 
-       success: user => {
-         updateNewScore(user.score)
-         updateScore(user.score)
-       },
-       fail: resetScore
-    })*/
     const href = await loadHref()
     if (href) {
       window.location.href = `${href}&login=${userName}`
     }
   }
 
-  /*function handleLogin() {
-    //console.log('chama github no botão de login...')
-    executeLogin({
-       userLogin: login,
-       token, 
-       success: user => updateScore(user.score), 
-       fail: resetScore
-    })
-  }*/
-  
   function handleEnter(event: KeyboardEvent) {
     if (event.code === 'Enter') {
       handleClick()
@@ -71,16 +48,19 @@ export default function Login(props: LoginProps) {
 
         <h1>Bem-vindo</h1>
 
+          <LoginFacebook fbAppId={props.fbAppId}/>
+
           <div className={styles.loginPlataform}>
             <EnterWithGithubLink>
-              <GoMarkGithub size={62} />
+              <GoMarkGithub size={48} />
 
               <span>
-                Faça login com seu Github<br/>
-                para começar
+                Entrar com o Github
               </span>
             </EnterWithGithubLink>
+
           </div>
+
 
         { appLogin && (
           <div className={styles.loginInput}>

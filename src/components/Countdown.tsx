@@ -32,12 +32,12 @@ export function Countdown() {
         onDoubleClick={configInitialTime}
       >
         <div>
-          <span>{leftMinute}</span>
+          <span className={styles.first}>{leftMinute}</span>
           <span>{rightMInute}</span>
         </div>
         <span>:</span>
         <div>
-          <span>{leftSecond}</span>
+          <span className={styles.first}>{leftSecond}</span>
           <span>{rightSecond}</span>
         </div>
       </div>

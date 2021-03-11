@@ -19,7 +19,11 @@
   --blue-twitter: #2AA9E0;
   --border: #414AA3;
   --github: #24292e;
-  --github-text: #fff
+  --github-text: #fff;
+  --facebook-new: #1877f2;
+  --facebook-new-dark: #166fe5;
+  --facebook-old: rgb(66,103,178);
+  --facebook-text: #fff;
 }
 
 @media(max-width: 1080px) {

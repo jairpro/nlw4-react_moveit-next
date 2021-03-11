@@ -2,9 +2,9 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import challenges from '../../challenges.json'
 import { LevelUpModal } from '../components/LevelUpModal'
 import api from '../services/api'
-import getApiLogin from '../services/api/login'
 import { LoginContext } from './LoginContext'
 import { compareToSortLeaderboard, MongoPratitionersData } from './RankingContext'
+import { ScoreContext, ScoreData } from './ScoreContext'
 
 interface Challenge {
   type: 'body' | 'eye'
@@ -12,17 +12,8 @@ interface Challenge {
   amount: number
 }
 
-export interface ScoreData {
-  level: number
-  currentExperience: number
-  challengesCompleted: number
-}
-
 interface ChallengesContextData {
-  level: number
-  currentExperience: number 
   experienceToNextLevel: number
-  challengesCompleted: number
   activeChallenge: Challenge
   leaderboard: Array<MongoPratitionersData>
   levelUp: () => void
@@ -30,8 +21,6 @@ interface ChallengesContextData {
   resetChallenge: () => void
   completeChallenge: () => void
   closeLevelUpModal: () => void
-  updateScore: (score: ScoreData) => void
-  resetScore: () => void
   loadLeaderboard: () => void
 }
 
@@ -57,9 +46,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   //   parece melhor solução que:
   //     v1!==undefined v1 ? : v2"
 
-  const [level, setLevel] = useState(rest.score.level ?? 1)
-  const [currentExperience, setCurrentExperience] = useState(rest.score.currentExperience ?? 0)
-  const [challengesCompleted, setChallengesCompleted] = useState(rest.score.challengesCompleted ?? 0)
+  const { level, currentExperience, challengesCompleted, updateOptionalScore, loadScore } = useContext(ScoreContext)
 
   const [activeChallenge, setActiveChallenge] = useState(null)
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
@@ -72,56 +59,11 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, name, avatarUrl, plataform, newScore, resetNewScore, token } = useContext(LoginContext)
-
-  //const { executeLogin } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform } = useContext(LoginContext)
 
   /*useEffect(() => {
     //Notification.requestPermission()
   }, [])*/
-
-  async function getScore() {
-    //console.log('login: ', login)
-    //console.log('token: ', token)
-    const responseLogin = await getApiLogin({
-      token,
-      userLogin: login,
-    })
-    
-    if (responseLogin) {
-      //console.log('responseLogin.score: ', responseLogin.score)
-      updateScore(responseLogin.score)
-    }
-  }
-
-  useEffect(() => {
-    /*console.log('Current score:', {
-      level, 
-      currentExperience, 
-      challengesCompleted
-    })*/
-    
-    if (!newScore) {
-      getScore()
-      return
-      ///executeLogin()
-    }
-
-    //console.log('Please! update score to:', newScore)
-
-    if (newScore) {
-      updateScore(newScore)
-      resetNewScore()
-    }
-  }, [])
-  
-  /*useEffect(() => {
-    console.log('Tanks!, score updated to:', {
-      level, 
-      currentExperience, 
-      challengesCompleted
-    })
-  }, [level, currentExperience, challengesCompleted])*/
 
   useEffect(() => {
     if (saving) {
@@ -131,22 +73,9 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     }
   }, [saving])
 
-  function updateScore(score: ScoreData) {
-    const newLevel = (score && score.level) ?? level
-
-    //console.log('update score')
-    //console.log('update score: ', score)
-    //console.log('newLevel: ', newLevel ) 
-
-    setLevel(newLevel)
-    setCurrentExperience((score && score.currentExperience) ?? currentExperience)
-    setChallengesCompleted((score && score.challengesCompleted) ?? challengesCompleted)
-    return
-  }
-
   function levelUp() {
     //console.log('level up...')
-    setLevel(level + 1)
+    updateOptionalScore({ level: level + 1})
     setIsLevelUpModalOpen(true)
   }
 
@@ -193,11 +122,13 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
       levelUp()      
     }
 
-    setCurrentExperience(finalExperience)
-    setActiveChallenge(null)
-    setChallengesCompleted(challengesCompleted + 1)
+    updateOptionalScore({
+      currentExperience: finalExperience,
+      challengesCompleted: challengesCompleted + 1,
+    })
 
-    //await save()
+    setActiveChallenge(null)
+
     setSaving(true)
   }
 
@@ -223,6 +154,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
       const result = await api.post("/api/save", {
         user, 
         score,
+        plataform
       })
 
       //console.log('save result: ', result)
@@ -245,14 +177,6 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
       return false
     }
-  }
-
-  function resetScore() {
-    //console.log('reset score...')
-    
-    setLevel(1)
-    setCurrentExperience(0)
-    setChallengesCompleted(0)
   }
 
   function updateLeaderboard() {
@@ -304,7 +228,9 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     try {
       //console.log('carregar leadboard com axios...')
       //const response = await axios.get('/api/leaderboard')
-      const response = await api.get('/api/list')
+      const response = await api.post('/api/list', {
+        plataform,
+      })
   
       //console.log('leaderboard reponse:', response)
   
@@ -323,10 +249,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
   return (
     <ChallengesContext.Provider value={{
-      level,
-      currentExperience,
       experienceToNextLevel,
-      challengesCompleted,
       activeChallenge,
       leaderboard,
       levelUp,
@@ -334,8 +257,6 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
       resetChallenge,
       completeChallenge,
       closeLevelUpModal,
-      updateScore,
-      resetScore,
       loadLeaderboard,
     }}>
       {children}

@@ -5,7 +5,7 @@ import { connectToDatabase } from '../../services/mongodb';
 export default async (request: NowRequest, response: NowResponse) => {
   const auth = await authMiddleware(request, response)
 
-  if (auth !== true) {
+  if (typeof auth === 'object') {
     return response.status(auth.status).json({ error: auth.error })
   }
 
@@ -22,7 +22,9 @@ export default async (request: NowRequest, response: NowResponse) => {
     }
   )
 
-  if (!updatedCursor || !updatedCursor.ok) {
+  //console.log('updatedCursor: ', updatedCursor)
+
+  if (!updatedCursor || !updatedCursor.value) {
     const newCursor = await collection.insertOne({
       login,
       name: user.name,
@@ -31,6 +33,8 @@ export default async (request: NowRequest, response: NowResponse) => {
       score,
       subscribedAt: new Date(),
     })
+
+    console.log('newCursor: ', newCursor)
 
     const newUser = newCursor.ops[0]
 

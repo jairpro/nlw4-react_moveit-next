@@ -2,9 +2,9 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Pages, PagesItemsProps } from '../components/Pages';
 import { SideBar } from '../components/SideBar';
-import { ScoreData } from '../contexts/ChallengesContext';
 import { LoginProvider } from '../contexts/LoginContext';
 import { RankingProvider } from '../contexts/RankingContext';
+import { ScoreData, ScoreProvider } from '../contexts/ScoreContext';
 import { SideBarProvider } from '../contexts/SideBarContext';
 
 export interface MetaData {
@@ -24,7 +24,10 @@ export interface IndexProps {
   page: string
   token: string
   meta: MetaData
+  plataform: string
 }
+
+import styles from '../styles/pages/Page.module.css'
 
 export default function Index(props: IndexProps) {
 
@@ -42,19 +45,25 @@ export default function Index(props: IndexProps) {
         <meta property="og:description" content={props.meta.ogDescription} />
       </Head>
       
-      <LoginProvider 
-        login={props.login}
-        isLogged={props.isLogged}
-        score={props.score}
-        token={props.token}
-      >
-        <RankingProvider>
-          <SideBarProvider page={props.page}>
-            <SideBar />
-            <Pages items={props.pages}/>
-          </SideBarProvider>
-        </RankingProvider>
-      </LoginProvider>
+      <ScoreProvider score={props.score}>
+        <LoginProvider 
+          login={props.login}
+          isLogged={props.isLogged}
+          score={props.score}
+          token={props.token}
+          fbAppId={props.meta.fbAppId}
+          plataform={props.plataform}
+          >
+          <RankingProvider>
+            <SideBarProvider page={props.page}>
+              <div className={styles.pageContainer}>
+                <SideBar />
+                <Pages items={props.pages}/>
+              </div>
+            </SideBarProvider>
+          </RankingProvider>
+        </LoginProvider>
+      </ScoreProvider>
     </>
   )
 }
@@ -72,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const currentExperience = 0
   const challengesCompleted = 0
 
-  const { login, isLogged, page, token } = ctx.req.cookies
+  const { login, isLogged, page, token, plataform } = ctx.req.cookies
 
   const referer = `https://${ctx.req.headers.host}/`
   const url = referer || process.env.APP_URL
@@ -119,6 +128,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       page: page ?? 'home',
       token: token ?? '',
       meta,
+      plataform: plataform ?? '',
     }
   }
 }
