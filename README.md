@@ -277,11 +277,11 @@ Passos:
    - [ ] Adicionar um parceiro ao completar o desafio (caso ele tenha feito junto contigo) para compartilhar o bônus recebido;
 
 ## 🎨 Leiautes:
-  [Moveit 2.0 (My Copy)](https://www.figma.com/file/O9IACvzkY4JlHZvCiTVju1/Move.it-2.0-(Copy)?node-id=160%3A2761);
+  [Moveit 2.0 (my copy)](https://www.figma.com/file/O9IACvzkY4JlHZvCiTVju1/Move.it-2.0-(Copy)?node-id=160%3A2761);
   
-  [Moveit 2.0 (Duplicate original)](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
+  [Moveit 2.0 (duplicate do original)](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
   
-  [Moveit 1.0 (Duplicate)](https://www.figma.com/file/ge20pu3ofMOKoliUyKx1Nl/Move.it-1.0/duplicate);
+  [Moveit 1.0 (duplicate do original)](https://www.figma.com/file/ge20pu3ofMOKoliUyKx1Nl/Move.it-1.0/duplicate);
   
   
 ## 💜 Agradecimentos:
