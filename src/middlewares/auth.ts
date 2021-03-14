@@ -1,14 +1,17 @@
-import { NowRequest, NowResponse } from "@vercel/node";
+import { NowRequest } from "@vercel/node";
 import getFBUserName from "../services/fb/userName";
 import { getGithubUser } from "../services/github/user";
 import { requestToToken } from "../utils/requestToToken";
 
-export default async (request: NowRequest, response: NowResponse) => {
+export default async (request: NowRequest, userID: string) => {
+
+  let result: any = {}
 
   //console.log('request.headers: ', request.headers)
 
   const token = requestToToken(request)
 
+  
   if (!token) {
     return {
       status: 401,
@@ -16,13 +19,19 @@ export default async (request: NowRequest, response: NowResponse) => {
     }
   }
 
+  result.token = token
+
   const { plataform } = request.body
 
   let responseUser: any
 
   switch (plataform) {
     case 'fb':
-      responseUser = await getFBUserName(token)
+      responseUser = await getFBUserName({
+        accessToken: token,
+        userID,
+      })
+      result.userFB = responseUser
       break
     
     case 'github':
@@ -31,10 +40,14 @@ export default async (request: NowRequest, response: NowResponse) => {
         scope: '',
         token_type: 'bearer'
       })
+      result.userGithub = responseUser
       break
 
     default:
-      break
+      return {
+        status: 401,
+        error: 'Plataform not provided!'
+      }
   }
 
   //console.log('responseUser: ', responseUser)
@@ -46,5 +59,5 @@ export default async (request: NowRequest, response: NowResponse) => {
     }  
   }
 
-  return token
+  return result
 }

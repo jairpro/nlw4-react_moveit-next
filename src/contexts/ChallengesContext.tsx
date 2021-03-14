@@ -59,7 +59,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceFactor = 4
   const experienceToNextLevel = Math.pow((level + 1) * experienceFactor, 2)
 
-  const { login, name, avatarUrl, plataform } = useContext(LoginContext)
+  const { login, name, avatarUrl, plataform, startLoading, stopLoading } = useContext(LoginContext)
 
   /*useEffect(() => {
     //Notification.requestPermission()
@@ -89,16 +89,17 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
     new Audio('/notification.mp3').play()
 
-    if (Notification.permission === 'granted') {
-      const n = new Notification('Novo desafio 🎉', {
-        body: `Valendo ${challenge.amount}xp!`
-      })
-      
-      n.onclick = e => {
-        window.focus()
+    if (typeof Notification!== 'undefined') {
+      if (Notification.permission === 'granted') {
+        const n = new Notification('Novo desafio 🎉', {
+          body: `Valendo ${challenge.amount}xp!`
+        })
+        
+        n.onclick = e => {
+          window.focus()
+        }
       }
     }
-
   }
 
   function resetChallenge() {
@@ -226,10 +227,13 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     //return
     
     try {
+      startLoading()
+
       //console.log('carregar leadboard com axios...')
       //const response = await axios.get('/api/leaderboard')
       const response = await api.post('/api/list', {
         plataform,
+        userID: login,
       })
   
       //console.log('leaderboard reponse:', response)
@@ -237,16 +241,18 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
       if (response && response.data) {
         let list = response.data
         setLeaderboard([...list])
+        stopLoading()
         return
       }
     }
     catch (error) {
       console.log('load leaderboard error: ', error)
     }
-
+    
     setLeaderboard([])
+    stopLoading()
   }
-
+  
   return (
     <ChallengesContext.Provider value={{
       experienceToNextLevel,

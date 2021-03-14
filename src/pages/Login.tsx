@@ -1,6 +1,6 @@
 
 import Head from 'next/head'
-import { KeyboardEvent, useState } from 'react'
+import { KeyboardEvent, useEffect, useState } from 'react'
 import { GoMarkGithub } from 'react-icons/go'
 import EnterWithGithubLink, { loadHref } from '../components/EnterWithGithubLink'
 import LoginFacebook from '../components/LoginFacebook'
@@ -16,6 +16,11 @@ export default function Login(props: LoginProps) {
   const [userName, setUserName] = useState(props.login ?? '')
 
   const appLogin = false
+
+  useEffect(function mount(){
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0
+  },[])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUserName(event.target.value)

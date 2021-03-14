@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 import { LoginContext } from "./LoginContext";
 import { ChallengesContext } from "./ChallengesContext";
 import { ScoreContext } from "./ScoreContext";
+import PageLoader from "../pages/PageLoader";
 
 interface SideBarContextData {
   page: string
@@ -47,7 +48,7 @@ export function SideBarProvider({ children, ...rest }: SideBarProviderProps) {
             success: user => updateScore(user.score),
             fail: resetScore,
           })
-          console.log('executeLogin chamado de SideBarContext,useEffect')
+          //console.log('executeLogin chamado de SideBarContext,useEffect')
           break
 
           default:
@@ -86,6 +87,8 @@ export function SideBarProvider({ children, ...rest }: SideBarProviderProps) {
     setPage('ranking')
   }
 
+  const { isLoading } = useContext(LoginContext)
+
   return (
     <SideBarContext.Provider value={{
       page,
@@ -93,6 +96,8 @@ export function SideBarProvider({ children, ...rest }: SideBarProviderProps) {
       showRanking,
     }}>
       { children }
+      { //isLoading ? (<PageLoader />) : (children)
+       }
     </SideBarContext.Provider>
   )
 }

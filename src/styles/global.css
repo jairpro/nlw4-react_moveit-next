@@ -41,6 +41,18 @@
 body {
   background: var(--background);
   color: var(--text);
+
+  height: 100vmax;
+  width: 100%;
+  overflow-y: hidden;
+}
+
+@media (max-height: 450px) {
+  body {
+    /*height: 100vh;*/
+    overflow-y: auto;
+  }
+
 }
 
 body, input, textarea, button {

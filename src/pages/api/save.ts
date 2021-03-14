@@ -3,14 +3,16 @@ import authMiddleware from '../../middlewares/auth';
 import { connectToDatabase } from '../../services/mongodb';
 
 export default async (request: NowRequest, response: NowResponse) => {
-  const auth = await authMiddleware(request, response)
+  const { user } = request.body
+  const { login } = user
 
-  if (typeof auth === 'object') {
+  const auth = await authMiddleware(request, login)
+
+  if (!auth.token) {
     return response.status(auth.status).json({ error: auth.error })
   }
 
-  const { user, score } = request.body
-  const { login } = user
+  const { score } = request.body
 
   const db = await connectToDatabase(process.env.MONGODB_URI)
 
@@ -34,7 +36,7 @@ export default async (request: NowRequest, response: NowResponse) => {
       subscribedAt: new Date(),
     })
 
-    console.log('newCursor: ', newCursor)
+    //console.log('newCursor: ', newCursor)
 
     const newUser = newCursor.ops[0]
 

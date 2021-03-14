@@ -68,16 +68,16 @@ export function ScoreProvider({ children, ...rest }: ScoreProviderProps) {
     //console.log('login: ', login)
     //console.log('token: ', token)
 
-    const responseLogin = await getApiLogin({
+    const response = await getApiLogin({
       token: data.token,
       userLogin: data.login,
       plataform: data.plataform,
     })
-    console.log('getApiLogin chamado de getScore')
+    //console.log('getApiLogin chamado de getScore')
 
-    if (responseLogin) {
-      //console.log('responseLogin.score: ', responseLogin.score)
-      updateScore(responseLogin.score)
+    if (response && response.score) {
+      //console.log('loadScore: ', response.score)
+      updateScore(response.score)
     }
   }
 

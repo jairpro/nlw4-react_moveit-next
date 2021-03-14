@@ -1,0 +1,9 @@
+$primary-color: #fff;
+@import '../../node_modules/loaders.css/src/animations/ball-triangle-trace.scss';
+
+.loader-hidden {
+  display: none;
+}
+.loader-active {
+  display: block;
+}

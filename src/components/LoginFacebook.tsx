@@ -66,12 +66,12 @@ export default function LoginFacebook(props: LoginFacebookProps) {
         userID: response.authResponse.userID,        
         accessToken: response.authResponse.accessToken        
       })) {
-        console.log('session success')
+        //console.log('session success')
         setIsLoggedFB(true)
         //initSessionFB()
       }
       else {
-        console.log('session fail')
+        //console.log('session fail')
       }
     }
 

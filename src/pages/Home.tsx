@@ -7,19 +7,19 @@ import { Profile } from "../components/Profile";
 import { CountdownProvider } from "../contexts/CountdownContext";
 import styles from '../styles/pages/Home.module.css';
 
-
 export interface HomeProps {
 
 }
 
 export default function Home(props: HomeProps) {
+
   return (
     <div className={styles.container}>
       <Head>
         <title>Início | move.it</title>
       </Head>
 
-      <ExperienceBar /> 
+      <ExperienceBar />
 
       <CountdownProvider>
         <section>

@@ -19,6 +19,9 @@
 
   padding: 32px;
   padding-top: 31px;
+
+  overflow-y: auto;
+  height: 100vh;
 }
 
 .sideBarPages {

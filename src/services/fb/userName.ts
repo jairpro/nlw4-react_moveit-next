@@ -1,10 +1,11 @@
 import axios from "axios";
+import { FbUserData } from "./user";
 
-export default async function getFbUserName(userToken: string) {
+export default async function getFbUserName(data: FbUserData) {
   try {
-    const response = await axios.get('https://graph.facebook.com/v10.0/me', {
+    const response = await axios.get(`https://graph.facebook.com/v10.0/${data.userID}?fields=name,email`, {
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${data.accessToken}`
       },
     })
 

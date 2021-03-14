@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
-import Loader from '../components/Loader'
 import Login from "../pages/Login"
+import PageLoader from '../pages/PageLoader'
 import api from '../services/api'
 import { getApiFbUser } from '../services/api/fb/user'
 import { getApiGithubAccessToken } from '../services/api/github/accessToken'
@@ -40,6 +40,8 @@ interface LoginContextData {
   executeLoginFB: (data: ExecuteLoginFBData) => Promise<boolean>
   updatePlataform: (name: string) => void
   initSessionFB: (data: SessionFbData) => Promise<boolean>
+  startLoading: () => void
+  stopLoading: () => void
 }
 
 interface LoginProviderProps {
@@ -67,6 +69,13 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
   const [hasLogged, setHasLogged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [token, setToken] = useState(rest.token)
+  const [loadingStack, setLoadingStack] = useState(0)
+
+  useEffect(() => {
+    if (!isLogged) {
+      setIsLoading(false)
+    }
+  }, [isLogged])
 
   const { updateScore } = useContext(ScoreContext)
 
@@ -97,7 +106,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
         //setHasLogged(true)
       return
     }
-    setIsLoading(true)
+    startLoading()
 
     const { search } = window.location
     const urlParams = new URLSearchParams(search);
@@ -105,14 +114,14 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     const code = urlParams.get('code')
     
     if (!code) {
-      setIsLoading(false)
+      stopLoading()
       return
     }
     
     const responseToken = await getApiGithubAccessToken(code)
     
     if (!responseToken) {
-      setIsLoading(false)
+      stopLoading()
       redirect()
       return
     }
@@ -120,7 +129,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     const { access_token } = responseToken
     
     if (!access_token) {
-      setIsLoading(false)
+      stopLoading()
       redirect()
       return
     }
@@ -132,7 +141,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     const responseUser = await getApiGithubUser(responseToken)
     
     if (!responseUser) {
-      setIsLoading(false)
+      stopLoading()
       redirect()
       return
     }
@@ -145,7 +154,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       setIsLogged(true)
     }
 
-    setIsLoading(false)
+    stopLoading()
     redirect()
   }
 
@@ -183,11 +192,11 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
 
     //console.log('execute login')
 
-    setIsLoading(true)
+    startLoading()
 
     const finalize = () => {
       if (!hasLoading) {
-        setIsLoading(false)
+        stopLoading()
       }
     }
 
@@ -235,15 +244,15 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       plataform: 'fb',
       userLogin: data.userID,
       token: data.accessToken,
-      success: user => console.log('usuario logado na aplicação com Facebook: ',user),
-      fail: ()=> console.log('Falha de login na aplicação com Facebook') 
+      //success: user => console.log('usuario logado na aplicação com Facebook: ',user),
+      //fail: ()=> console.log('Falha de login na aplicação com Facebook') 
     })
     
     if (!logged) {
       return false
     }
     
-    setIsLoading(true)
+    startLoading()
     
     try {
       const { accessToken } = data
@@ -253,7 +262,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       if (session) {
         api.defaults.headers.Authorization = `Bearer ${accessToken}`
 
-        console.log('executeLoginFB result:', session)
+        //console.log('executeLoginFB result:', session)
         
         updatePlataform('fb')
         setIsLogged(true)
@@ -261,7 +270,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
         setLogin(session.id)
         setName(session.name)
         setAvatarUrl(session.pictureUrl)
-        setIsLoading(false)
+        stopLoading()
 
         /*executeLogin({
           plataform: 'fb',
@@ -278,7 +287,7 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
     }
 
     updatePlataform('')
-    setIsLoading(false)
+    stopLoading()
     return false
   }
 
@@ -301,6 +310,28 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       Cookies.remove('token')
     }
   }
+
+  function startLoading() {
+    if (!isLoading) {
+      setIsLoading(true)
+    }
+    else {
+      setLoadingStack(loadingStack+1)
+    }
+  }
+
+  function stopLoading() {
+    if (loadingStack>0) {
+      setLoadingStack(
+        isLoading 
+        ? (loadingStack-1) 
+        : 0
+      )
+    }
+    else {
+      setIsLoading(false)
+    }
+  }
   
   return (
     <LoginContext.Provider value={{
@@ -317,14 +348,19 @@ export function LoginProvider({ children, ...rest }: LoginProviderProps) {
       executeLoginFB,
       updatePlataform,
       initSessionFB,
+      startLoading,
+      stopLoading,
     }}>
       <ChallengesProvider score={rest.score}>
-        { isLoading
-          ? (<Loader />)
-          : ( isLogged 
-            ? ( children) 
-            : ( <Login fbAppId={rest.fbAppId}/> )
-          )
+        {
+          isLogged
+          ? ( children )
+          : ( 
+              isLoading
+              ? ( <PageLoader /> )
+              : ( <Login fbAppId={rest.fbAppId} />  )
+            )
+               
         }
       </ChallengesProvider>
     </LoginContext.Provider>

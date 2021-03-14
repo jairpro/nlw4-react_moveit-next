@@ -1,7 +1,7 @@
 import axios from "axios";
-import { ApiFbUserData } from "../api/fb/user";
+import { FbUserData } from "./user";
 
-export default async function getFbUserPicture(data: ApiFbUserData) {
+export default async function getFbUserPicture(data: FbUserData) {
   try {
     const { accessToken, userID } = data
 

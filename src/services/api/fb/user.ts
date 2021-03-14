@@ -1,31 +1,26 @@
-import { AxiosResponse } from "axios"
-import api from '../../api'
-import { ApiFbUserResponse } from '../../../pages/api/fb/user'
+import { FbUserData, FbUserResponse, getFbUser } from "../../fb/user"
 
-export interface ApiFbUserData {
-  accessToken: string
-  userID?: string
-}
-
-export async function getApiFbUser(data: ApiFbUserData): Promise<ApiFbUserResponse> {
+export async function getApiFbUser(data: FbUserData): Promise<FbUserResponse> {
   try {
+    //console.log('getApiFbUser data:', data)
+
     const { userID, accessToken } = data
 
-    const response: AxiosResponse = await api.post('/api/fb/user', {
-      userID 
-    }, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
+    const response: any = await getFbUser({
+      accessToken,
+      userID,
     })
 
-    if (response && response.data) {
-      return response.data
+    //console.log("response data: ", response)
+    
+    if (response) {
+      return response
     }
   }
   catch (error) {
-    console.log('/api/fb/user error: ', error)
+    console.log('/api/fb/user error: ', error.message)
   }
 
+  console.log("passei por aqui :/")
   return null
 }

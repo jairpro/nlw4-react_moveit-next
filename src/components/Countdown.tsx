@@ -25,11 +25,25 @@ export function Countdown() {
     }
   }
 
+  let tapedTwice = false;
+
+  function doubleTap(event: any) {
+    if (!tapedTwice) {
+      tapedTwice = true;
+      setTimeout(() => tapedTwice = false, 150);
+      return false;
+    }
+    
+    event.preventDefault();
+    configInitialTime()
+  }
+
   return (
     <div>
       <div 
         className={styles.countdownContainer}
         onDoubleClick={configInitialTime}
+        onTouchStart={doubleTap}
       >
         <div>
           <span className={styles.first}>{leftMinute}</span>

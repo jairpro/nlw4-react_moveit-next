@@ -1,5 +1,7 @@
 .rankingContainer {
+  padding: 0.5rem;
   padding-top: 2.5rem;
+  padding-bottom: 5rem;
   /*padding-left: 18.5rem;*/
   display: flex;
   flex-direction: column;
