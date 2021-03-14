@@ -245,43 +245,45 @@ Passos:
 
 
 ## ⚔ Desafios:
-1) Documentar o projeto:
-   - Gif da aplicação;
-   - Video;
-   - Coloca no Github;
-   - Read-me bonito;
-   - Tecnologias utilizadas;
-   - Instruções para baixar e rodar local (*gitclone*, *yarn* para instalar as dependências, etc);
-   - Quais as funcionalidades que existem dentro da aplicação;
-   - Prints da aplicação de como que ela está funcionando (das funcionalidades em si. Uma print de quando aparece o desafio, de quando o usuário sobe de nível. Uma print de quando é a tela em branco); 
-   - Explique a logística e tudo o mais... documentação é o mínimo.
+1) [ ] Documentar o projeto:
+   - [ ] Gif da aplicação;
+   - [ ] Video;
+   - [x] Coloca no Github;
+   - [x] Read-me bonito;
+   - [ ] Tecnologias utilizadas;
+   - [ ] Instruções para baixar e rodar local (*gitclone*, *yarn* para instalar as dependências, etc);
+   - [ ] Quais as funcionalidades que existem dentro da aplicação;
+   - [ ] Prints da aplicação de como que ela está funcionando (das funcionalidades em si. Uma print de quando aparece o desafio, de quando o usuário sobe de nível. Uma print de quando é a tela em branco); 
+   - [ ] Explique a logística e tudo o mais... documentação é o mínimo.
 
-2) Melhorar estilização da aplicação:
-   - Responsividade (medias querys para se adaptar ao mobile);
-   - PWA (Para permitir instalar no celular e sair utilizando, não necessitando desenvolver o app para iOS/Android. O Next tem integração com PWA, pesquise documentações para isso);
-   - Trocar as cores da aplicação (utilizar temas diferentes como dark, separar umas cores diferentes);
+2) [ ] Melhorar estilização da aplicação:
+   - [ ] Responsividade (medias querys para se adaptar ao mobile);
+   - [ ] PWA (Para permitir instalar no celular e sair utilizando, não necessitando desenvolver o app para iOS/Android. O Next tem integração com PWA, pesquise documentações para isso);
+   - [ ] Trocar as cores da aplicação (utilizar temas diferentes como dark, separar umas cores diferentes);
 
-3) Novas Funcionalidades - *Moveit 2.0*:
-   - Logar com Github:
-     A ideia inicial era uma tela de login onde o usuário digita seu _username_ do github para a aplicação buscar os dados públicos;
-     Mas poderia ser, levando para o próximo nível, fazer um botão "Logar com Github" fazendo o OAuth do Github (pesquise "oauth github").
-     E pode-se fazer tudo com o NextJS, sem backend. Inclusive acessar API externa, gravar num banco de dados, etc.
-     
-     Pesquise sobre Next no [Youtube da Rocketseat](https://www.youtube.com/c/RocketSeat/search?query=next.js).
-     
-     Veja o vídeo [Serverless com ReactJS e Next.js na Vercel](https://www.youtube.com/watch?v=Cz55Jmhfw84)
-     
-   - Sidebar;
-   - Ranking de usuários;
-   - Compartilhar no Twitter;
+3) [ ] Novas Funcionalidades - *Moveit 2.0*:
+   - [x] Logar com Github:
+         A ideia inicial era uma tela de login onde o usuário digita seu _username_ do github para a aplicação buscar os dados públicos.
+         Mas poderia ser, levando para o próximo nível, fazer um botão "Logar com Github" fazendo o OAuth do Github (pesquise "oauth github").
+         E pode-se fazer tudo com o NextJS, sem backend. Inclusive acessar API externa, gravar num banco de dados, etc;
+   - [ ] Pesquise sobre Next no [Youtube da Rocketseat](https://www.youtube.com/c/RocketSeat/search?query=next.js);
+   - [x] Veja o vídeo [Serverless com ReactJS e Next.js na Vercel](https://www.youtube.com/watch?v=Cz55Jmhfw84);
+   - [x] Sidebar;
+   - [x] Ranking de usuários;
+   - [ ] Compartilhar no Twitter;
    
 
-4) Dá para adicionar muito mais funcionalidades;
+4) Dá para adicionar muito mais funcionalidades:
+   - [ ] Adicionar um parceiro ao completar o desafio (caso ele tenha feito junto contigo) para compartilhar o bônus recebido;
 
 ## 🎨 Leiautes:
-[Moveit 1.0](https://www.figma.com/file/ge20pu3ofMOKoliUyKx1Nl/Move.it-1.0/duplicate);
-[Moveit 2.0](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
-
+  [Moveit 2.0 (My Copy)](https://www.figma.com/file/O9IACvzkY4JlHZvCiTVju1/Move.it-2.0-(Copy)?node-id=160%3A2761);
+  
+  [Moveit 2.0 (Duplicate original)](https://www.figma.com/file/vRbW1u0CEZuG2zE6bU5qLg/Move.it-2.0/duplicate);
+  
+  [Moveit 1.0 (Duplicate)](https://www.figma.com/file/ge20pu3ofMOKoliUyKx1Nl/Move.it-1.0/duplicate);
+  
+  
 ## 💜 Agradecimentos:
 
 _Agradecimento especial ao [Diego Fernandes](https://github.com/diego3g/diego3g) pela aula, ao [Tiago Luchtenberg](https://www.instagram.com/tiagoluchtenberg/?hl=pt-br) pelos leiautes e a todos da [Rockeatseat](https://rocketseat.com.br/) pelo empenho em levar os devs ao próximo nível._
